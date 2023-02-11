@@ -1,7 +1,7 @@
 mysql-connector-python
-SQLAlchemy~=2.0.2
+SQLAlchemy==2.0.3
 sqlalchemy-utils
-fastapi[all]~=0.90.0
+fastapi[all]==0.91.0
 fastapi-utils
 PYMYSQL
 uvicorn~=0.20.0
