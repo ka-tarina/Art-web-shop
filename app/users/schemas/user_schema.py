@@ -1,5 +1,5 @@
 from pydantic import BaseModel, UUID4, EmailStr
-
+# Maybe redundant
 
 class UserSchema(BaseModel):
     """Model for representing a User in the system."""
