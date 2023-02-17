@@ -10,7 +10,6 @@ class SuperUserBase(BaseModel):
     password: str
     status: UserStatus = UserStatus.ACTIVE
     role: UserRole = UserRole.SUPERUSER
-    access_level: int
 
 
 class SuperUserCreate(SuperUserBase):
@@ -23,8 +22,8 @@ class SuperUserCreate(SuperUserBase):
 
 
 class SuperUser(SuperUserBase):
+    """A schema representing a Superuser"""
     id: UUID4
 
     class Config:
         orm_mode = True
-

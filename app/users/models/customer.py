@@ -15,10 +15,8 @@ follows = Table(
 class Customer(User):
     """A class representing a customer in the system."""
     __tablename__ = "customers"
-
-    # Additional attributes for customers
     id = Column(String(50), ForeignKey("users.id"), primary_key=True)
-    is_verified = Column(Boolean, default=False, nullable=False)
+    # is_verified = Column(Boolean, default=False, nullable=False)
 
     # Relationships with other tables
     orders = relationship("Order", back_populates="customer")

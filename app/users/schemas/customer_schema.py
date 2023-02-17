@@ -29,12 +29,12 @@ class CustomerSchemaInDB(CustomerSchemaBase):
         orm_mode = True
 
 
-class CustomerSchemaOut(BaseModel):
-    """A schema representing a Customer to return as response"""
-    customer: CustomerSchemaInDB
-    collections: List[CollectionSchemaInDB]
-    orders: List[OrderSchemaInDB]
-    following: List[ArtistSchemaInDB]
-
-    class Config:
-        orm_mode = True
+# class CustomerSchemaOut(BaseModel):
+#     """A schema representing a Customer to return as response"""
+#     customer: CustomerSchemaInDB
+#     collections: List[CollectionSchemaInDB]
+#     orders: List[OrderSchemaInDB]
+#     following: List[ArtistSchemaInDB]
+#
+#     class Config:
+#         orm_mode = True

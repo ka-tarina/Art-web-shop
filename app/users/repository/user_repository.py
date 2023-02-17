@@ -31,24 +31,6 @@ class UserRepository:
         except Exception as e:
             raise e
 
-    # def create_superuser(self, superuser: SuperUserCreate) -> SuperUser:
-    #     """Creates a new superuser in the system."""
-    #     try:
-    #         user = SuperUser(
-    #             name=superuser.name,
-    #             email=superuser.email,
-    #             password=superuser.password,
-    #             role=superuser.role,
-    #             status=superuser.status)
-    #         self.db.add(superuser)
-    #         self.db.commit()
-    #         self.db.refresh(superuser)
-    #         return user
-    #     except IntegrityError as e:
-    #         raise e
-    #     except Exception as e:
-    #         raise e
-
     # def create_admin(self, name, email, password):
     #     """Creates a new admin in the system."""
     #     try:
@@ -115,13 +97,6 @@ class UserRepository:
             return user
         except Exception as e:
             raise e
-
-    def confirm_password(self, user_id: str, password: str) -> bool:
-        user = self.get_user_by_id(user_id=user_id)
-        if not user:
-            return False
-        hashed_password = hashlib.sha256(bytes(password, "utf-8")).hexdigest()
-        return user.password == hashed_password
 
     def check_password(self, user_id: str, password: str):
         """Returns if the password is correct for the user_id."""

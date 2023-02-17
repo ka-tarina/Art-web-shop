@@ -31,15 +31,6 @@ class UserServices:
                 raise e
 
     # @staticmethod
-    # def create_superuser(superuser: SuperUserCreate):
-    #     with SessionLocal() as db:
-    #         try:
-    #             user_repository = UserRepository(db)
-    #             return user_repository.create_superuser(superuser)
-    #         except Exception as e:
-    #             raise e
-    #
-    # @staticmethod
     # def create_admin(name, email, password):
     #     with SessionLocal() as db:
     #         try:
