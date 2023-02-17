@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import UUID4, BaseModel, EmailStr
 from typing import Optional
 from app.users.models import UserStatus, UserRole
 

@@ -1,7 +1,7 @@
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey, ForeignKeyConstraint, String, Table
 from sqlalchemy.orm import relationship
-from user import User, UserRole
+from app.users.models import User, UserRole
 
 
 artist_followers = Table(
@@ -32,6 +32,6 @@ class Artist(User):
 
     def __init__(self, name, email, password, status, bio="", website=""):
         """Initializes a new Artist object."""
-        super().__init__(name=name, email=email, password=password, role=UserRole.ARTIST, status=status)
+        super().__init__(username=name, email=email, password=password, role=UserRole.ARTIST, status=status)
         self.bio = bio
         self.website = website

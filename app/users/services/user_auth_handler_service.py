@@ -1,68 +1,34 @@
 import time
 from typing import Dict
-
 import jwt
-
 from app.config import settings
+from app.users.models import UserRole
 
-# JWTSUPER_USER_SECRET = settings.SUPERUSER_SECRET
-# JWT_CLASSIC_USER_SECRET = settings.CLASSIC_USER_SECRET
-#
 USER_SECRET = settings.USER_SECRET
 JWT_ALGORITHM = settings.ALGORITHM
 
-# def signSuperUserJWT(user_id: str) -> Dict[str, str]:
-#     payload = {
-#         "user_id": user_id,
-#         "is_super_user": "super_user",
-#         "expires": time.time() + 1200
-#     }
-#     token = jwt.encode(payload, JWT_SUPER_USER_SECRET, algorithm=JWT_ALGORITHM)
-#
-#     return {"access_token": token}
-#
-#
-# def decodeSuperUserJWT(token: str) -> dict:
-#     try:
-#         decoded_token = jwt.decode(token, JWT_SUPER_USER_SECRET, algorithms=[JWT_ALGORITHM])
-#         return decoded_token if decoded_token["expires"] >= time.time() else None
-#     except:
-#         return {}
-#
-# def signClassicUserJWT(user_id: str) -> Dict[str, str]:
-#     payload = {
-#         "user_id": user_id,
-#         "is_super_user": "super_user",
-#         "expires": time.time() + 1200
-#     }
-#     token = jwt.encode(payload, JWT_CLASSIC_USER_SECRET, algorithm=JWT_ALGORITHM)
-#
-#     return {"access_token": token}
-#
-#
-# def decodeClassicUserJWT(token: str) -> dict:
-#     try:
-#         decoded_token = jwt.decode(token, JWT_CLASSIC_USER_SECRET, algorithms=[JWT_ALGORITHM])
-#         return decoded_token if decoded_token["expires"] >= time.time() else None
-#     except:
-#         return {}
 
+class UserAuthHandlerServices:
+    @staticmethod
+    def signJWT(user_id: str, role: UserRole) -> Dict[str, str]:
+        payload = {
+            "user_id": user_id,
+            "role": role,
+            "expires": time.time() + 1200
+        }
 
-def signJWT(user_id: str, role:str) -> Dict[str, str]:
-    payload = {
-        "user_id": user_id,
-        "role": role,
-        "expires": time.time() + 1200
-    }
+        token = jwt.encode(payload, USER_SECRET, algorithm=JWT_ALGORITHM)
 
-    token = jwt.encode(payload, USER_SECRET, algorithm=JWT_ALGORITHM)
+        return {"access_token": token}
 
-    return {"access_token": token}
-
-
-def decodeJWT(token: str) -> dict:
-    try:
-        decoded_token = jwt.decode(token, USER_SECRET, algorithms=[JWT_ALGORITHM])
-        return decoded_token if decoded_token["expires"] >= time.time() else None
-    except:
-        return {}
+    @staticmethod
+    def decodeJWT(token: str) -> Dict or None:
+        try:
+            decoded_token = jwt.decode(token, USER_SECRET, algorithms=[JWT_ALGORITHM])
+            user_id: str = decoded_token.get("user_id")
+            role: UserRole = decoded_token.get("role")
+            if user_id is None or role is None:
+                return None
+            return {"user_id": user_id, "role": role}
+        except jwt.exceptions.ExpiredSignatureError:
+            return None

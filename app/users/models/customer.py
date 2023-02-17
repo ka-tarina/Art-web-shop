@@ -1,7 +1,7 @@
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String, Boolean, ForeignKey, Table
 from app.db.database import Base
-from user import User, UserRole
+from app.users.models import User, UserRole
 
 
 follows = Table(
@@ -23,8 +23,8 @@ class Customer(User):
     # Relationships with other tables
     orders = relationship("Order", back_populates="customer")
     collections = relationship("Collection", back_populates="customer")
-    following = relationship("Artist", secondary=follows, backpopulates="followers")
+    following = relationship("Artist", secondary=follows, back_populates="followers")
 
     def __init__(self, name, email, password, status):
         """Initializes a new Customer object."""
-        super().__init__(name=name, email=email, password=password, role=UserRole.CUSTOMER, status=status)
+        super().__init__(username=name, email=email, password=password, role=UserRole.CUSTOMER, status=status)

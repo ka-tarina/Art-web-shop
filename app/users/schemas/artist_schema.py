@@ -1,12 +1,11 @@
 from typing import List
-from uuid import UUID
-from pydantic import BaseModel
+from pydantic import UUID4, BaseModel, EmailStr
 from app.users.models import UserRole, UserStatus
 
 
 class ArtistSchemaBase(BaseModel):
     """Base model for representing an Artist."""
-    id: UUID
+    id: UUID4
     name: str
     email: str
     bio: str

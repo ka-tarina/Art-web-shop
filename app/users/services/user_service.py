@@ -1,78 +1,119 @@
+from pydantic import EmailStr
+
 from app.db.database import SessionLocal
 import hashlib
 from app.users.exceptions import UserInvalidPassword
+from app.users.models import UserStatus
 from app.users.repository.user_repository import UserRepository
+from app.users.schemas import SuperUserCreate
+
+
+def repository_method_wrapper(func):
+    def wrapper(*args, **kwargs):
+        with SessionLocal() as db:
+            try:
+                repository = UserRepository(db)
+                return func(repository, *args, **kwargs)
+            except Exception as e:
+                raise e
+    return wrapper
 
 
 class UserServices:
     @staticmethod
-    def create_user(name, email, password: str):
+    def create_user(username, email, password: str):
         with SessionLocal() as db:
             try:
                 user_repository = UserRepository(db)
                 hashed_password = hashlib.sha256(bytes(password, "utf-8")).hexdigest()
-                return user_repository.create_user(name=name, email=email, password=hashed_password)
+                return user_repository.create_user(username=username, email=email, password=hashed_password)
             except Exception as e:
                 raise e
 
-    @staticmethod
-    def create_superuser(name, email, password):
-        with SessionLocal() as db:
-            try:
-                user_repository = UserRepository(db)
-                hashed_password = hashlib.sha256(bytes(password, "utf-8")).hexdigest()
-                return user_repository.create_superuser(name=name, email=email, password=hashed_password)
-            except Exception as e:
-                raise e
+    # @staticmethod
+    # def create_superuser(superuser: SuperUserCreate):
+    #     with SessionLocal() as db:
+    #         try:
+    #             user_repository = UserRepository(db)
+    #             return user_repository.create_superuser(superuser)
+    #         except Exception as e:
+    #             raise e
+    #
+    # @staticmethod
+    # def create_admin(name, email, password):
+    #     with SessionLocal() as db:
+    #         try:
+    #             user_repository = UserRepository(db)
+    #             hashed_password = hashlib.sha256(bytes(password, "utf-8")).hexdigest()
+    #             return user_repository.create_admin(name=name, email=email, password=hashed_password)
+    #         except Exception as e:
+    #             raise e
 
     @staticmethod
-    def create_admin(name, email, password):
-        with SessionLocal() as db:
-            try:
-                user_repository = UserRepository(db)
-                hashed_password = hashlib.sha256(bytes(password, "utf-8")).hexdigest()
-                return user_repository.create_admin(name=name, email=email, password=hashed_password)
-            except Exception as e:
-                raise e
+    @repository_method_wrapper
+    def get_user_by_id(repository, user_id: str):
+        return repository.get_user_by_id(user_id=user_id)
 
     @staticmethod
-    def get_user_by_id(user_id: str):
-        with SessionLocal() as db:
-            user_repository = UserRepository(db)
-            return user_repository.get_user_by_id(user_id=user_id)
+    @repository_method_wrapper
+    def get_user_by_username(repository, username: str):
+        return repository.get_user_by_username(username=username)
 
     @staticmethod
-    def get_user_by_email(email: str):
-        with SessionLocal() as db:
-            user_repository = UserRepository(db)
-            return user_repository.read_user_by_email(email=email)
+    @repository_method_wrapper
+    def get_user_by_username_or_id(repository, username_or_id: str):
+        return repository.get_user_by_username_or_id(username_or_id=username_or_id)
 
     @staticmethod
-    def get_all_users():
-        with SessionLocal() as db:
-            user_repository = UserRepository(db)
-            return user_repository.get_all_users()
+    @repository_method_wrapper
+    def get_user_by_email(repository, email: EmailStr):
+        return repository.read_user_by_email(email=email)
 
     @staticmethod
-    def delete_user_by_id(user_id: str):
-        try:
-            with SessionLocal() as db:
-                user_repository = UserRepository(db)
-                return user_repository.delete_user_by_id(user_id=user_id)
-        except Exception as e:
-            raise e
+    @repository_method_wrapper
+    def get_user_by_username_or_id_or_email(repository, username_id_email: str):
+        return repository.get_user_by_username_or_id_or_email(username_id_email=username_id_email)
 
     @staticmethod
-    def update_user_is_active(user_id: str, is_active: bool):
-        with SessionLocal() as db:
-            try:
-                user_repository = UserRepository(db)
-                return user_repository.update_user_is_active(user_id=user_id, is_active=is_active)
-            except Exception as e:
-                raise e
+    @repository_method_wrapper
+    def update_user_email(repository, email: EmailStr, new_email: EmailStr):
+        return repository.update_user_email(email=email, new_email=new_email)
 
     @staticmethod
-    def login_user(email: str, password: str):
+    def verify_password(plain_password, hashed_password):
+        return hashed_password == hashlib.sha256(bytes(plain_password, "utf-8")).hexdigest()
+
+    @staticmethod
+    @repository_method_wrapper
+    def update_user_password(repository, email: EmailStr, password: str, new_password: str):
+        user = repository.read_user_by_email(email=email)
+        if not repository.check_password(user_id=user.email, password=password):
+            raise ValueError("Invalid old password")
+        hashed_password = hashlib.sha256(bytes(new_password, 'utf-8')).hexdigest()
+        return repository.update_user_password(email=email, new_password=hashed_password)
+
+    @staticmethod
+    @repository_method_wrapper
+    def update_user_status(repository, username_id_email: str, status: UserStatus):
+        return repository.update_user_status(username_id_email=username_id_email, status=status)
+
+    @staticmethod
+    @repository_method_wrapper
+    def update_user_role(repository, username_id_email: str, role: UserStatus):
+        return repository.update_user_role(username_id_email=username_id_email, role=role)
+
+    @staticmethod
+    @repository_method_wrapper
+    def get_all_users(repository):
+        return repository.get_all_users()
+
+    @staticmethod
+    @repository_method_wrapper
+    def delete_user_by_id(repository, user_id: str):
+        return repository.delete_user_by_id(user_id=user_id)
+
+    @staticmethod
+    def login_user(email: EmailStr, password: str):
         with SessionLocal() as db:
             try:
                 user_repository = UserRepository(db)

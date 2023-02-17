@@ -1,7 +1,9 @@
 from enum import Enum
 from uuid import uuid4
-from sqlalchemy import Boolean, Column, String
+from sqlalchemy import Boolean, Column, String, ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import sqltypes
+
 from app.db.database import Base
 
 
@@ -25,16 +27,20 @@ class User(Base):
     username = Column(String(100), unique=True, index=True, nullable=False)
     email = Column(String(100), unique=True, index=True, nullable=False)
     password = Column(String(100), nullable=False)
-    status = Column(Enum(UserStatus), nullable=False)
-    role = Column(Enum(UserRole), nullable=False)
+    status = Column(sqltypes.Enum(UserStatus), nullable=False)
+    role = Column(sqltypes.Enum(UserRole), nullable=False)
 
     # Relationships with other tables
     artwork = relationship("Artwork", back_populates="user")
     orders = relationship("Order", back_populates="user")
+    superuser = relationship("SuperUser", uselist=False, back_populates="user")
+    admin = relationship("Admin", uselist=False, back_populates="user")
+    artist = relationship("Artist", uselist=False, back_populates="user")
+    customer = relationship("Customer", uselist=False, back_populates="user")
 
-    def __init__(self, name, email, password, role, status):
+    def __init__(self, username, email, password, role, status):
         """Initializes a new User object."""
-        self.name = name
+        self.username = username
         self.email = email
         self.password = password
         self.role = role

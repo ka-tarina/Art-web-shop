@@ -1,11 +1,10 @@
 from typing import Optional
-from pydantic import BaseModel, EmailStr
+from pydantic import UUID4, BaseModel, EmailStr
 from app.users.models import UserRole, UserStatus
 
 
-class SuperUser(BaseModel):
-    """A schema representing a Superuser stored in the database"""
-    id: str
+class SuperUserBase(BaseModel):
+    """Base model for representing a Superuser."""
     name: str
     email: str
     password: str
@@ -13,12 +12,19 @@ class SuperUser(BaseModel):
     role: UserRole = UserRole.SUPERUSER
     access_level: int
 
-    class Config:
-        orm_mode = True
 
-
-class SuperUserIn(BaseModel):
+class SuperUserCreate(SuperUserBase):
     """A schema representing a Superuser creation request"""
     name: str
     email: EmailStr
     password: str
+    role: UserRole.SUPERUSER
+    status: UserStatus.ACTIVE
+
+
+class SuperUser(SuperUserBase):
+    id: UUID4
+
+    class Config:
+        orm_mode = True
+
