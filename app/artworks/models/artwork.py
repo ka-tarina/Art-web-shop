@@ -6,7 +6,7 @@ from app.db.database import Base
 
 class Artwork(Base):
     __tablename__ = "artwork"
-    id = Column(String(36), primary_key=True, default=str(uuid4()), unique=True, index=True)
+    id = Column(String(36), primary_key=True, default=uuid4, unique=True, index=True)
     name = Column(String(100), index=True)
     description = Column(String(500))
     price = Column(Float, index=True)
