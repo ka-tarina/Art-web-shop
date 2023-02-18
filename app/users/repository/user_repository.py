@@ -1,10 +1,8 @@
 import hashlib
-
 from pydantic import EmailStr
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from app.users.models import User, UserRole, UserStatus
-from app.users.schemas import SuperUser, SuperUserCreate
 
 
 class UserRepository:
@@ -30,19 +28,6 @@ class UserRepository:
             raise e
         except Exception as e:
             raise e
-
-    # def create_admin(self, name, email, password):
-    #     """Creates a new admin in the system."""
-    #     try:
-    #         user = User(name=name, email=email, password=password, is_admin=True)
-    #         self.db.add(user)
-    #         self.db.commit()
-    #         self.db.refresh(user)
-    #         return user
-    #     except IntegrityError as e:
-    #         raise e
-    #     except Exception as e:
-    #         raise e
 
     def get_user_by_id(self, user_id: str):
         """Gets a user from the database by their ID."""

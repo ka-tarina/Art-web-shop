@@ -1,11 +1,9 @@
 from pydantic import EmailStr
-
 from app.db.database import SessionLocal
 import hashlib
 from app.users.exceptions import UserInvalidPassword
 from app.users.models import UserStatus
-from app.users.repository.user_repository import UserRepository
-from app.users.schemas import SuperUserCreate
+from app.users.repository import UserRepository
 
 
 def repository_method_wrapper(func):
@@ -30,20 +28,10 @@ class UserServices:
             except Exception as e:
                 raise e
 
-    # @staticmethod
-    # def create_admin(name, email, password):
-    #     with SessionLocal() as db:
-    #         try:
-    #             user_repository = UserRepository(db)
-    #             hashed_password = hashlib.sha256(bytes(password, "utf-8")).hexdigest()
-    #             return user_repository.create_admin(name=name, email=email, password=hashed_password)
-    #         except Exception as e:
-    #             raise e
-
     @staticmethod
     @repository_method_wrapper
     def get_user_by_id(repository, user_id: str):
-        return repository.get_user_by_id(user_id=user_id)
+        return repository.get_category_by_id(user_id=user_id)
 
     @staticmethod
     @repository_method_wrapper

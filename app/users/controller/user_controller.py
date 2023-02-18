@@ -118,7 +118,7 @@ class UserController:
             return user
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e))
-        except Exception as e:
+        except Exception:
             raise HTTPException(status_code=400, detail=f"User with provided email {email} does not exist")
 
     @staticmethod
