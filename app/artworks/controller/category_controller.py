@@ -84,8 +84,8 @@ class CategoryController:
     def get_artworks_by_category_id(category_id: str, skip: int = 0, limit: int = 100):
         try:
             artworks = CategoryService.get_artworks_by_category_id(category_id=category_id,
-                                                                     skip=skip,
-                                                                     limit=limit)
+                                                                   skip=skip,
+                                                                   limit=limit)
             return artworks
         except CategoryNotFoundException as e:
             print(e)

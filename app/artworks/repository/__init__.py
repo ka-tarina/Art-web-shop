@@ -1,1 +1,2 @@
 from .category_repository import CategoryRepository
+from .artwork_repository import ArtworkRepository

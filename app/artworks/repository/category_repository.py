@@ -1,5 +1,3 @@
-from typing import List
-
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from app.artworks.models import Category
@@ -52,5 +50,7 @@ class CategoryRepository:
     def delete_category_by_id(self, category_id: str):
         """Deletes a category from the database by their ID."""
         category = self.get_category_by_id(category_id)
+        if not category:
+            return None
         self.db.delete(category)
         self.db.commit()
