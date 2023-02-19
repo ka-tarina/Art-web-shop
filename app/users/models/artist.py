@@ -30,8 +30,8 @@ class Artist(User):
         back_populates="followed_artists"
     )
 
-    def __init__(self, name, email, password, status, bio="", website=""):
+    def __init__(self, username, email, password, status, bio="", website=""):
         """Initializes a new Artist object."""
-        super().__init__(username=name, email=email, password=password, role=UserRole.ARTIST, status=status)
+        super().__init__(username=username, email=email, password=password, role=UserRole.ARTIST, status=status)
         self.bio = bio
         self.website = website

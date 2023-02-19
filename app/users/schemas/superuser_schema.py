@@ -17,8 +17,8 @@ class SuperUserCreate(SuperUserBase):
     name: str
     email: EmailStr
     password: str
-    role: UserRole.SUPERUSER
-    status: UserStatus.ACTIVE
+    role: UserRole
+    status: UserStatus
 
 
 class SuperUser(SuperUserBase):

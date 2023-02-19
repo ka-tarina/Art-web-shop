@@ -30,7 +30,7 @@ class AdminController:
             )
 
     @staticmethod
-    def get_superuser_by_id(admin_id: str):
+    def get_admin_by_id(admin_id: str):
         admin = AdminServices.get_admin_by_id(admin_id)
         if admin:
             return admin
@@ -48,7 +48,10 @@ class AdminController:
     @staticmethod
     def delete_admin_by_id(admin_id: str):
         try:
+            deleted = AdminServices.get_admin_by_id(admin_id)
+            if not deleted:
+                raise HTTPException(status_code=404, detail="User not found")
             AdminServices.delete_admin_by_id(admin_id)
-            return {"message": f"Admin with provided id {admin_id} was successfully deleted from the database."}
+            return {"detail": f"Admin deleted successfully"}
         except Exception as e:
             raise HTTPException(status_code=400, detail=str(e))

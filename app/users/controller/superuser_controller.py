@@ -48,7 +48,10 @@ class SuperUserController:
     @staticmethod
     def delete_superuser_by_id(superuser_id: str):
         try:
+            deleted = SuperUserServices.get_superuser_by_id(superuser_id)
+            if not deleted:
+                raise HTTPException(status_code=404, detail="User not found")
             SuperUserServices.delete_superuser_by_id(superuser_id)
-            return {"message": f"Superuser with provided id {superuser_id} was successfully deleted from the database."}
+            return {"detail": "Superuser deleted successfully"}
         except Exception as e:
             raise HTTPException(status_code=400, detail=str(e))

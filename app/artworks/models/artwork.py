@@ -6,7 +6,7 @@ from app.db.database import Base
 
 class Artwork(Base):
     __tablename__ = "artwork"
-    id = Column(String(36), primary_key=True, default=uuid4, unique=True, index=True)
+    id = Column(String(50), primary_key=True, default=uuid4, unique=True, index=True)
     name = Column(String(100), index=True)
     description = Column(String(500))
     price = Column(Float, index=True)
@@ -22,6 +22,8 @@ class Artwork(Base):
     artist = relationship("Artist", back_populates="artworks")
 
     currency = Column(Enum("RSD", "EUR", name="currency_type"), default="RSD", server_default="RSD")
+
+    cart_item = relationship("CartItem", back_populates="artworks")
 
     def __init__(self, name: str, description: str, price: float, image: str, stock: int, category_id: int,
                  status: bool, artist_id: int, currency: str):

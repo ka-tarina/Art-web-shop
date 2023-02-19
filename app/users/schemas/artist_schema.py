@@ -1,4 +1,3 @@
-from typing import List
 from pydantic import UUID4, BaseModel, EmailStr
 from app.users.models import UserRole, UserStatus
 
@@ -7,7 +6,7 @@ class ArtistSchemaBase(BaseModel):
     """Base model for representing an Artist."""
     id: UUID4
     name: str
-    email: str
+    email: EmailStr
     bio: str
     website: str
     status: UserStatus
@@ -20,7 +19,7 @@ class ArtistSchemaBase(BaseModel):
 class ArtistSchemaCreate(BaseModel):
     """Model for creating an Artist."""
     name: str
-    email: str
+    email: EmailStr
     password: str
     bio: str = ""
     website: str = ""
@@ -29,19 +28,14 @@ class ArtistSchemaCreate(BaseModel):
 class ArtistSchemaUpdate(BaseModel):
     """Model for updating an Artist."""
     name: str
-    email: str
+    email: EmailStr
     password: str
     bio: str = ""
     website: str = ""
 
 
-class ArtistSchemaIn(BaseModel):
+class ArtistSchemaIn(ArtistSchemaCreate):
     """Model for representing incoming Artist data."""
-    name: str
-    email: str
-    password: str
-    bio: str = ""
-    website: str = ""
 
     class Config:
         orm_mode = True

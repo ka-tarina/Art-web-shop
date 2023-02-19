@@ -1,23 +1,9 @@
-from enum import Enum
 from uuid import uuid4
 from sqlalchemy import Boolean, Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import sqltypes
-
 from app.db.database import Base
-
-
-class UserRole(str, Enum):
-    SUPERUSER = "superuser"
-    ADMIN = "admin"
-    ARTIST = "artist"
-    CUSTOMER = "customer"
-
-
-class UserStatus(str, Enum):
-    ACTIVE = "active"
-    PENDING = "pending"
-    INACTIVE = "inactive"
+from app.users.models.user_enum import UserStatus, UserRole
 
 
 class User(Base):

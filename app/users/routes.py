@@ -42,3 +42,31 @@ def delete_user_by_id(user_id: str):
 # @user_router.put("/update/is_active", response_model=UserSchema)
 # def update_user(user_id: str, is_active: bool):
 #     return UserController.update_user_is_active(user_id, is_active)
+
+router = APIRouter()
+@router.post("/customers")
+async def create_customer(name: str, email: EmailStr, password: str):
+    customer = CustomerController.create_artist(name, email, password, )
+    return customer
+
+@router.get("/customers")
+async def get_all_customers():
+    customers = CustomerController.get_all_customers()
+    return customers
+
+@router.delete("/customers/{customer_id}")
+async def delete_customer_by_id(customer_id: str):
+    response = CustomerController.delete_customer_by_id(customer_id)
+    return response
+
+@router.put("/customers/{user_id}")
+async def update_customer_status(user_id: str, status: UserStatus):
+    response = CustomerController.update_customer_status(user_id, status)
+    return response
+
+@router.get("/customers/{email}")
+async def read_customer_by_email(email: str):
+    customer = CustomerController.read_customer_by_email(email)
+    return customer
+
+#get customer by id missing

@@ -151,7 +151,10 @@ class UserController:
     @staticmethod
     def delete_user_by_id(user_id: str):
         try:
+            deleted = UserServices.get_user_by_id(user_id)
+            if not deleted:
+                raise HTTPException(status_code=404, detail="User not found")
             UserServices.delete_user_by_id(user_id)
-            return {"message": f"User with provided id {user_id} was successfully deleted from the database."}
+            return {"detail": f"User with provided id {user_id} was successfully deleted from the database."}
         except Exception as e:
-            raise HTTPException(status_code=400, detail=str(e))
+            raise HTTPException(status_code=500, detail=str(e))
