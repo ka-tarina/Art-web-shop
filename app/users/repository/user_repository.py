@@ -65,8 +65,8 @@ class UserRepository:
         """Gets a user from the database by either their username, ID or email."""
         try:
             user = self.db.query(User).filter((User.username == username_id_email) |
-                                               (User.id == username_id_email) |
-                                               (User.email == username_id_email)).first()
+                                              (User.id == username_id_email) |
+                                              (User.email == username_id_email)).first()
             return user
         except Exception as e:
             raise e

@@ -1,5 +1,6 @@
+from datetime import datetime
 from uuid import uuid4
-from sqlalchemy import Column, Integer, Float, String, DateTime, ForeignKey
+from sqlalchemy import Column, Float, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import sqltypes
 from app.db.database import Base
@@ -10,17 +11,24 @@ class Order(Base):
     """A class representing an order in the system."""
     __tablename__ = 'orders'
     id = Column(String(50), primary_key=True, default=uuid4, unique=True, index=True)
-    user_id = Column(String(50), ForeignKey('users.id'))
-    order_date = Column(DateTime)
+
+    user_id = Column(String(50), ForeignKey('users.id'), index=True)
+    user = relationship("User", back_populates="orders")
+
+    order_date = Column(DateTimedefault=datetime.utcnow, index=True)
     total_price = Column(Float, index=True)
-    shipping_address = Column(String(200), index=True)
-    order_status = Column(sqltypes.Enum(OrderStatus), index=True)
 
-    # Define a relationship to the User model
-    user = relationship('User', back_populates='orders')
+    shipping_address = Column(String(500), index=True)
+    order_status = Column(sqltypes.Enum(OrderStatus), default=OrderStatus.PENDING, index=True)
 
-    def __init__(self, user_id: int, total_price: float, shipping_address: str):
-        """Initializes a new Order object."""
+    artwork_id = Column(String(50), ForeignKey("artwork.id"), index=True)
+    artwork = relationship("Artwork", back_populates="order")
+
+    def __init__(self, user_id: str, order_date: datetime, total_price: float, shipping_address: str, artwork_id: str,
+                 order_status: OrderStatus = OrderStatus.PENDING):
         self.user_id = user_id
+        self.order_date = order_date
         self.total_price = total_price
         self.shipping_address = shipping_address
+        self.artwork_id = artwork_id
+        self.order_status = order_status

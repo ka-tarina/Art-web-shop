@@ -11,7 +11,6 @@ class Artwork(Base):
     description = Column(String(500))
     price = Column(Float, index=True)
     image = Column(String(200))
-    stock = Column(Integer)
 
     category_id = Column(Integer, ForeignKey("category.id"))
     category = relationship("Category", back_populates="artworks")
@@ -23,7 +22,7 @@ class Artwork(Base):
 
     currency = Column(Enum("RSD", "EUR", name="currency_type"), default="RSD", server_default="RSD")
 
-    cart_item = relationship("CartItem", back_populates="artworks")
+    order = relationship("Order", uselist=False, back_populates="artwork")
 
     def __init__(self, name: str, description: str, price: float, image: str, stock: int, category_id: int,
                  status: bool, artist_id: int, currency: str):

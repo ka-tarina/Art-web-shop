@@ -11,7 +11,7 @@ class OrderBaseSchema(BaseModel):
 
 
 class OrderCreateSchema(OrderBaseSchema):
-    order_date: Optional[datetime] = datetime.now()
+    order_date: Optional[datetime] = datetime.utcnow()
     order_status: Optional[str] = "Pending"
 
 

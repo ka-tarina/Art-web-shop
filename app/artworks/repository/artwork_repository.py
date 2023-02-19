@@ -13,7 +13,7 @@ class ArtworkRepository:
         return self.db.query(Artwork).all()
 
     def get_artwork_by_id(self, artwork_id: str):
-        """Gets an artwork from the database by its name."""
+        """Gets an artwork from the database by its id."""
         return self.db.query(Artwork).filter(Artwork.id == artwork_id).first()
 
     def get_artwork_by_name(self, artwork_name: str):
@@ -23,8 +23,16 @@ class ArtworkRepository:
     def artwork_exists(self, name: str, description: str):
         return self.db.query(Artwork).filter_by(name=name, description=description).first() is not None
 
-    def create_artwork(self, name: str, description: str, price: float, image: str, stock: int, category_id: uuid4,
-                       status: bool, artist_id: uuid4, currency: Currency):
+    def create_artwork(self,
+                       name: str,
+                       description: str,
+                       price: float,
+                       image: str,
+                       stock: int,
+                       category_id: uuid4,
+                       status: bool,
+                       artist_id: uuid4,
+                       currency: Currency):
         """Creates a new artwork in the system."""
         try:
             artwork = Artwork(name, description, price, image, stock, category_id, status, artist_id, currency)

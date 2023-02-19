@@ -19,16 +19,29 @@ def repository_method_wrapper(func):
 class ArtworkService:
     @staticmethod
     @repository_method_wrapper
-    def create_artwork(name: str, description: str, price: float, image: str, stock: int,
-                       category_id: uuid4, status: bool, artist_id: uuid4, currency: Currency):
+    def create_artwork(name: str,
+                       description: str,
+                       price: float,
+                       image: str,
+                       stock: int,
+                       category_id: uuid4,
+                       status: bool,
+                       artist_id: uuid4,
+                       currency: Currency):
         with SessionLocal() as db:
             try:
                 repository = ArtworkRepository(db)
                 if repository.artwork_exists(name, description):
                     raise ArtworkExceptionCode(message="Artwork already exists in the database", code=400)
-                return repository.create_artwork(name=name, description=description, price=price, image=image,
-                                                 stock=stock, category_id=category_id, status=status,
-                                                 artist_id=artist_id, currency=currency)
+                return repository.create_artwork(name=name,
+                                                 description=description,
+                                                 price=price,
+                                                 image=image,
+                                                 stock=stock,
+                                                 category_id=category_id,
+                                                 status=status,
+                                                 artist_id=artist_id,
+                                                 currency=currency)
             except Exception as e:
                 raise e
 
