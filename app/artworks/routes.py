@@ -45,7 +45,7 @@ async def get_artworks_by_category_id(category_id: str, skip: int = 0, limit: in
     return CategoryController.get_artworks_by_category_id(category_id, skip, limit)
 
 
-artwork_router = APIRouter(tags=["artwork"], prefix="/api/artworks")
+artwork_router = APIRouter(tags=["artworks"], prefix="/api/artworks")
 
 
 @artwork_router.post("/", response_model=ArtworkCreate)
