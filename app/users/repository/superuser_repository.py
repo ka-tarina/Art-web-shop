@@ -1,6 +1,7 @@
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-from app.users.models import SuperUser, UserRole
+from app.users.models import SuperUser
+from app.users.enums import UserRole
 from app.users.repository import UserRepository
 
 

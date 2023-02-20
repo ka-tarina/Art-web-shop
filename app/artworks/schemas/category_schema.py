@@ -1,10 +1,13 @@
 from typing import List
-from pydantic import BaseModel
-from app.artworks.models import Artwork
+from pydantic import BaseModel, UUID4
+from app.artworks.schemas import ArtworkBase
 
 
 class CategoryBase(BaseModel):
     name: str
+
+    class Config:
+        orm_mode = True
 
 
 class CategoryCreate(CategoryBase):
@@ -12,8 +15,8 @@ class CategoryCreate(CategoryBase):
 
 
 class Category(CategoryBase):
-    id: str
-    artworks: List[Artwork] = []
+    id: UUID4
+    artworks: List["ArtworkBase"] = []
 
     class Config:
         orm_mode = True

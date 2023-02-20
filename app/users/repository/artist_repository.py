@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
-from app.users.models import Artist, UserStatus
+from app.users.models import Artist
+from app.users.enums import UserStatus
 
 
 class ArtistRepository:

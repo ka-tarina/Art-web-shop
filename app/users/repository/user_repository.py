@@ -2,7 +2,8 @@ import hashlib
 from pydantic import EmailStr
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-from app.users.models import User, UserRole, UserStatus
+from app.users.models import User
+from app.users.enums import  UserRole, UserStatus
 
 
 class UserRepository:

@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from pydantic import EmailStr
 from sqlalchemy.exc import IntegrityError
 from app.users.exceptions import UserInvalidPassword
-from app.users.models import UserRole, UserStatus
+from app.users.enums import UserRole, UserStatus
 from app.users.services import UserServices, UserAuthHandlerServices
 
 

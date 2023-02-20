@@ -1,7 +1,8 @@
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String, ForeignKey, Table
 from app.db.database import Base
-from app.users.models import User, UserRole
+from app.users.models import User
+from app.users.enums import UserRole
 
 
 follows = Table(

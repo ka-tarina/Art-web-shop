@@ -5,25 +5,25 @@ from app.db.database import Base
 
 
 class Artwork(Base):
-    __tablename__ = "artwork"
+    __tablename__ = "artworks"
     id = Column(String(50), primary_key=True, default=uuid4, unique=True, index=True)
     name = Column(String(100), index=True)
     description = Column(String(500))
     price = Column(Float, index=True)
     image = Column(String(200))
 
-    category_id = Column(Integer, ForeignKey("category.id"))
+    category_id = Column(String(50), ForeignKey("category.id"))
     category = relationship("Category", back_populates="artworks")
 
     status = Column(Boolean, default=True)
     stock = int
 
-    artist_id = Column(Integer, ForeignKey("artist.id"))
+    artist_id = Column(String(50), ForeignKey("artists.id"))
     artist = relationship("Artist", back_populates="artworks")
 
     currency = Column(Enum("RSD", "EUR", name="currency_type"), default="RSD", server_default="RSD")
 
-    order = relationship("Order", uselist=False, back_populates="artwork")
+    order = relationship("Order", uselist=False, back_populates="artworks")
 
     def __init__(self, name: str, description: str, price: float, image: str, stock: int, category_id: int,
                  status: bool, artist_id: int, currency: str):

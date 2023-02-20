@@ -1,6 +1,6 @@
 from pydantic import UUID4, BaseModel, EmailStr
 from typing import Optional
-from app.users.models import UserStatus, UserRole
+from app.users.enums import UserStatus, UserRole
 
 
 class AdminBase(BaseModel):

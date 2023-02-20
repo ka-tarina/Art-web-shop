@@ -1,5 +1,5 @@
 from pydantic import UUID4, BaseModel, EmailStr
-from app.users.models import UserRole, UserStatus
+from app.users.enums import UserRole, UserStatus
 
 
 class CustomerSchemaBase(BaseModel):

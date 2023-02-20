@@ -18,6 +18,10 @@ class ArtworkBase(BaseModel):
     artist_id: UUID4
     currency: Currency
 
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
 
 class ArtworkCreate(ArtworkBase):
     pass
@@ -28,3 +32,4 @@ class Artwork(ArtworkBase):
 
     class Config:
         orm_mode = True
+        arbitrary_types_allowed = True

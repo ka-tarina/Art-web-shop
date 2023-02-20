@@ -2,7 +2,7 @@ from pydantic import EmailStr
 from app.db.database import SessionLocal
 import hashlib
 from app.users.exceptions import UserInvalidPassword
-from app.users.models import UserStatus
+from app.users.enums import UserStatus
 from app.users.repository import UserRepository
 
 
