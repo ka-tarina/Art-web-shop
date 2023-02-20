@@ -67,6 +67,11 @@ class ArtworkService:
 
     @staticmethod
     @repository_method_wrapper
+    def get_stock_by_artwork_id(repository, artwork_id):
+        return repository.get_stock_by_artwork_id(artwork_id=artwork_id)
+
+    @staticmethod
+    @repository_method_wrapper
     def get_artworks_in_price_range(repository, min_price: float, max_price: float):
         return repository.get_artworks_in_price_range(min_price=min_price, max_price=max_price)
 

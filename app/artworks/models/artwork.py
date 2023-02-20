@@ -16,6 +16,7 @@ class Artwork(Base):
     category = relationship("Category", back_populates="artworks")
 
     status = Column(Boolean, default=True)
+    stock = int
 
     artist_id = Column(Integer, ForeignKey("artist.id"))
     artist = relationship("Artist", back_populates="artworks")

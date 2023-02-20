@@ -45,6 +45,14 @@ class ArtworkRepository:
         except Exception as e:
             raise e
 
+    def get_stock_by_id(self, artwork_id: str):
+        """Gets the stock of an artwork by its ID."""
+        try:
+            artwork = self.db.query(Artwork).filter(Artwork.id == artwork_id).first()
+            return artwork.stock
+        except Exception as e:
+            raise e
+
     def update_artwork(self, artwork_id: str, artwork_attribute: str, value):
         """Updates an attribute of the artwork."""
         allowed_attributes = ['name', 'description', 'price', 'image', 'stock',

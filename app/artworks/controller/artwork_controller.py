@@ -49,6 +49,16 @@ class ArtworkController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
+    def get_stock_by_artwork_id(artwork_id):
+        try:
+            artwork = ArtworkService.get_artwork_by_id(artwork_id)
+            if not artwork:
+                raise ArtworkNotFoundException(f"Artwork with ID {artwork_id} not found.", code=400)
+            return ArtworkService.get_stock_by_artwork_id(artwork_id)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+    @staticmethod
     def delete_artwork_by_id(artwork_id: str):
         try:
             ArtworkService.delete_artwork_by_id(artwork_id)
