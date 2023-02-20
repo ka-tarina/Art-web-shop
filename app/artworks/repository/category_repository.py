@@ -9,10 +9,10 @@ class CategoryRepository:
         """Initializes a new instance of the CategoryRepository class."""
         self.db = db
 
-    def create_category(self, category_name):
+    def create_category(self, name):
         """Creates a new category in the system."""
         try:
-            category = Category(name=category_name)
+            category = Category(name=name)
             self.db.add(category)
             self.db.commit()
             self.db.refresh(category)
