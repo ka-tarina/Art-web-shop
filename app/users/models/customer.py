@@ -1,7 +1,7 @@
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String, ForeignKey, Table
 from app.db.database import Base
-from app.users.models import User
+from app.users.models import User, Artist
 from app.users.enums import UserRole
 
 
@@ -19,5 +19,16 @@ class Customer(User):
     id = Column(String(50), ForeignKey("users.id"), primary_key=True)
 
     # Relationships with other tables
+    user = relationship("User", back_populates="customer")
     orders = relationship("Order", back_populates="customer")
-    following = relationship("Artist", secondary=follows, back_populates="followers")
+
+    follows = relationship(
+        "Artist",
+        secondary=follows,
+        primaryjoin=(id == follows.c.customer_id),
+        secondaryjoin=(id == follows.c.artist_id),
+        back_populates="followers",
+        foreign_keys=[follows.c.customer_id, follows.c.artist_id]
+    )
+
+

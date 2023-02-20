@@ -10,3 +10,5 @@ class SuperUser(User):
     __tablename__ = "superusers"
     id = Column(String(50), ForeignKey("users.id"), primary_key=True)
     role = Column(sqltypes.Enum(UserRole, native_enum=False), default=UserRole.SUPERUSER)
+
+    user = relationship("User", back_populates="superuser")

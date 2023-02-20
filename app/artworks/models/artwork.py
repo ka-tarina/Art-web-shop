@@ -18,12 +18,14 @@ class Artwork(Base):
     status = Column(Boolean, default=True)
     stock = int
 
-    artist_id = Column(String(50), ForeignKey("artists.id"))
-    artist = relationship("Artist", back_populates="artworks")
+    artist_id = Column(String(50), ForeignKey("users.id"))
+    artist = relationship("Artist", back_populates="artworks", overlaps="artwork_artist")
+
+    artwork_artist = relationship("Artist", back_populates="artworks", foreign_keys=[artist_id])
 
     currency = Column(Enum("RSD", "EUR", name="currency_type"), default="RSD", server_default="RSD")
 
-    order = relationship("Order", uselist=False, back_populates="artworks")
+    orders = relationship("Order", uselist=False, back_populates="artwork")
 
     def __init__(self, name: str, description: str, price: float, image: str, stock: int, category_id: int,
                  status: bool, artist_id: int, currency: str):

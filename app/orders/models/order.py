@@ -15,6 +15,8 @@ class Order(Base):
     user_id = Column(String(50), ForeignKey('users.id'), index=True)
     user = relationship("User", back_populates="orders")
 
+    customer = relationship("Customer", back_populates="orders", foreign_keys=[user_id])
+
     order_date = Column(DateTime, default=datetime.utcnow, index=True)
     total_price = Column(Float, index=True)
 
@@ -22,7 +24,7 @@ class Order(Base):
     order_status = Column(sqltypes.Enum(OrderStatus), default=OrderStatus.PENDING, index=True)
 
     artwork_id = Column(String(50), ForeignKey("artworks.id"), index=True)
-    artwork = relationship("Artwork", back_populates="order")
+    artwork = relationship("Artwork", back_populates="orders")
 
     def __init__(self, user_id: str, order_date: datetime, total_price: float, shipping_address: str, artwork_id: str,
                  order_status: OrderStatus = OrderStatus.PENDING):
