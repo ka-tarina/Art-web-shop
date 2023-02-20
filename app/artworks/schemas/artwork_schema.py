@@ -1,5 +1,6 @@
 from enum import Enum
 from pydantic import BaseModel, UUID4
+from pydantic.schema import Optional, Any
 
 
 class Currency(str, Enum):
@@ -25,6 +26,15 @@ class ArtworkBase(BaseModel):
 
 class ArtworkCreate(ArtworkBase):
     pass
+
+
+class ArtworkUpdate(BaseModel):
+    attribute: str
+    value: Any
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
 
 
 class Artwork(ArtworkBase):
