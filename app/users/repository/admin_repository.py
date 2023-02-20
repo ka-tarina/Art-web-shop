@@ -1,14 +1,12 @@
-"""Module for admin repository."""
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-from app.users.enums import UserRole
 from app.users.models import Admin
+from app.users.enums import UserRole
 from app.users.repository import UserRepository
 
 
 class AdminRepository(UserRepository):
     """A repository class for Admin models."""
-
     def __init__(self, db: Session):
         """Initializes a new instance of the AdminRepository class."""
         super().__init__(db)
@@ -16,7 +14,9 @@ class AdminRepository(UserRepository):
     def create_admin(self, username, email, password):
         """Creates a new admin in the system."""
         try:
-            admin = Admin(username=username, email=email, password=password)
+            user = self.create_user(username=username, email=email, password=password)
+            user.role = UserRole.ADMIN
+            admin = Admin.from_orm(user)
             self.db.add(admin)
             self.db.commit()
             self.db.refresh(admin)
@@ -35,19 +35,18 @@ class AdminRepository(UserRepository):
             raise e
 
     def get_admin_by_id(self, admin_id: str):
-        """Gets an admin from the database by their ID."""
-        admin = self.db.query(Admin).get(admin_id)
-        if admin is None:
-            raise Exception(f"Artist with ID {admin_id} not found")
-        return admin
+        """Gets a superuser from the database by their ID."""
+        user = self.get_user_by_id(admin_id)
+        if user.role == UserRole.ADMIN:
+            return Admin.from_orm(user)
 
     def get_all_admins(self):
-        """Gets all admins from the database."""
+        """Gets all superusers from the database."""
         admins = self.db.query(Admin).all()
         return admins
 
     def delete_admin_by_id(self, admin_id: str):
-        """Deletes an admin from the database by their ID."""
+        """Deletes a superuser from the database by their ID."""
         try:
             admin = self.get_admin_by_id(admin_id)
             if admin:

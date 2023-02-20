@@ -1,10 +1,9 @@
-"""Module for user repository."""
 import hashlib
 from pydantic import EmailStr
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from app.users.models import User
-from app.users.enums import UserRole, UserStatus
+from app.users.enums import  UserRole, UserStatus
 
 
 class UserRepository:
@@ -50,8 +49,7 @@ class UserRepository:
     def get_user_by_username_or_id(self, username_or_id: str):
         """Gets a user from the database by their username or their ID."""
         try:
-            user = self.db.query(User).filter((User.username == username_or_id) |
-                                              (User.id == username_or_id)).first()
+            user = self.db.query(User).filter((User.username == username_or_id) | (User.id == username_or_id)).first()
             return user
         except Exception as e:
             raise e
@@ -106,10 +104,10 @@ class UserRepository:
         except Exception as e:
             raise e
 
-    def update_user_status(self, user_id: str, status: UserStatus):
+    def update_user_status(self, username_id_email: str, status: UserStatus):
         """Updates the status of the user."""
         try:
-            user = self.get_user_by_id(user_id)
+            user = self.get_user_by_username_or_id_or_email(username_id_email)
             user.status = status
             self.db.add(user)
             self.db.commit()

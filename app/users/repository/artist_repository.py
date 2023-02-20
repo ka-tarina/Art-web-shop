@@ -1,6 +1,6 @@
-"""Module for artist repository."""
 from sqlalchemy.orm import Session
 from app.users.models import Artist
+from app.users.enums import UserStatus
 
 
 class ArtistRepository:
@@ -10,18 +10,10 @@ class ArtistRepository:
         """Initializes a new instance of the ArtistRepository class."""
         self.db = db
 
-    def create_artist(self,
-                      username: str,
-                      email: str,
-                      password: str,
-                      bio: str = "",
-                      website: str = ""):
+    def create_artist(self, username: str, email: str, password: str, bio: str = "", website: str = ""):
         """Creates a new artist in the system."""
         try:
-            artist = Artist(username=username,
-                            email=email,
-                            password=password,
-                            bio=bio,
+            artist = Artist(username=username, email=email, password=password, status=UserStatus.ACTIVE, bio=bio,
                             website=website)
             self.db.add(artist)
             self.db.commit()
@@ -70,10 +62,13 @@ class ArtistRepository:
         except Exception as e:
             raise e
 
-    def delete_artist_by_id(self, artist_id: str):
+    def delete_artist(self, artist_id: str):
         """Deletes an artist from the system."""
-        artist = self.get_artist_by_id(artist_id)
-        if not artist:
-            return None
-        self.db.delete(artist)
-        self.db.commit()
+        try:
+            artist = self.get_artist_by_id(artist_id)
+
+            self.db.delete(artist)
+            self.db.commit()
+            return True
+        except Exception as e:
+            raise e

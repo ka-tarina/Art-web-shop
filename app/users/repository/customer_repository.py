@@ -1,31 +1,22 @@
-"""Module for customer repository."""
+from pydantic import UUID4
 from typing import Optional
-from pydantic import EmailStr
-from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session
+from app.users.models import Customer
 from app.users.enums import UserRole, UserStatus
-from app.users.models import Customer, User
-from app.users.repository import UserRepository
 
 
 class CustomerRepository:
     """A repository class for Customer models."""
-
     def __init__(self, db: Session):
         """Initializes a new instance of the CustomerRepository class."""
         self.db = db
-        self.user_repository = UserRepository(db)
 
     def create_customer(self, username, email, password):
         """Creates a new customer in the system."""
         try:
-            user = self.user_repository.create_user(username=username,
-                                                    email=email,
-                                                    password=password)
-            customer = Customer(username=user.username,
-                                email=user.email,
-                                password=user.password)
+            customer = Customer(username=username, email=email, password=password,
+                                role=UserRole.CUSTOMER, status=UserStatus.ACTIVE)
             self.db.add(customer)
             self.db.commit()
             self.db.refresh(customer)
@@ -40,25 +31,6 @@ class CustomerRepository:
         customer = self.db.query(Customer).filter(Customer.id == customer_id).first()
         return customer
 
-    def get_customer_by_username(self, username: str):
-        """Gets a customer from the database by their username."""
-        try:
-            customer = self.db.query(Customer).join(User).filter(User.username == username).first()
-            return customer
-        except Exception as e:
-            raise e
-
-    def get_customer_by_username_or_id_or_email(self, identifier: str) -> Optional[Customer]:
-        """Gets a customer from the database by their username, ID, or email."""
-        try:
-            customer = self.db.query(Customer).join(User).filter(
-                or_(Customer.username == identifier,
-                    Customer.user_id == identifier,
-                    User.email == identifier)).first()
-            return customer
-        except Exception as e:
-            raise e
-
     def get_all_customers(self):
         """Gets all customers from the database."""
         customers = self.db.query(Customer).all()
@@ -67,9 +39,7 @@ class CustomerRepository:
     def delete_customer_by_id(self, customer_id: str):
         """Deletes a customer from the database by their ID."""
         try:
-            customer = (
-                self.db.query(Customer).filter(Customer.id == customer_id).first()
-            )
+            customer = self.db.query(Customer).filter(Customer.id == customer_id).first()
             self.db.delete(customer)
             self.db.commit()
             return True
@@ -92,14 +62,3 @@ class CustomerRepository:
         """Gets a customer from the database by their email."""
         user = self.db.query(Customer).filter(Customer.email == email).first()
         return user
-
-    def update_customer_email(self, customer_id: str, email: EmailStr) -> Customer:
-        """Updates a customer's email in the database."""
-        try:
-            customer = self.get_customer_by_id(customer_id)
-            customer.user.email = email
-            self.db.commit()
-            return customer
-        except Exception as e:
-            self.db.rollback()
-            raise e
