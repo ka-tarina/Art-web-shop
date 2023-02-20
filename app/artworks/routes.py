@@ -42,3 +42,38 @@ async def get_artworks_by_category_name(category_name: str, skip: int = 0, limit
 @category_router.get("/get-artworks-by-category-id/{category_id}/artworks")
 async def get_artworks_by_category_id(category_id: str, skip: int = 0, limit: int = 100):
     return CategoryController.get_artworks_by_category_id(category_id, skip, limit)
+
+
+artwork_router = APIRouter(tags=["artwork"], prefix="/api/artworks")
+
+@artwork_router.post("/", response_model=ArtworkCreate)
+def create_artwork(artwork_data: ArtworkCreate, controller: ArtworkController = Depends()):
+    return controller.create_new_artwork(**artwork_data.dict())
+
+@artwork_router.get("/", response_model=list[ArtworkCreate])
+def get_all_artworks(controller: ArtworkController = Depends()):
+    return controller.get_all_artworks()
+
+@artwork_router.get("/{artwork_id}", response_model=ArtworkCreate)
+def get_artwork_by_id(artwork_id: str, controller: ArtworkController = Depends()):
+    return controller.get_artwork_by_id(artwork_id)
+
+@artwork_router.get("/search/{artwork_name}", response_model=ArtworkCreate)
+def get_artwork_by_name(artwork_name: str, controller: ArtworkController = Depends()):
+    return controller.get_artwork_by_name(artwork_name)
+
+@artwork_router.get("/{artwork_id}/stock", response_model=int)
+def get_stock_by_artwork_id(artwork_id: str, controller: ArtworkController = Depends()):
+    return controller.get_stock_by_artwork_id(artwork_id)
+
+@artwork_router.delete("/{artwork_id}", status_code=204)
+def delete_artwork_by_id(artwork_id: str, controller: ArtworkController = Depends()):
+    return controller.delete_artwork_by_id(artwork_id)
+
+@artwork_router.put("/{artwork_id}", response_model=ArtworkCreate)
+def update_artwork(artwork_id: str, artwork_data: ArtworkUpdate, controller: ArtworkController = Depends()):
+    return controller.update_artwork(artwork_id, artwork_data.attribute, artwork_data.value)
+
+@artwork_router.get("/search", response_model=list[ArtworkCreate])
+def get_artworks_in_price_range(min_price: float, max_price: float, controller: ArtworkController = Depends()):
+    return controller.get_artworks_in_price_range(min_price, max_price)
