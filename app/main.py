@@ -4,6 +4,7 @@ from starlette.responses import RedirectResponse
 from app.db.database import Base, engine
 from app.users.routes import user_router, customer_router, superuser_router, artist_router, admin_router, follow_router
 from app.artworks.routes import category_router, artwork_router
+from app.orders.routes import order_router
 from celery import Celery
 
 Base.metadata.create_all(bind=engine)
@@ -19,6 +20,7 @@ def init_app():
     app.include_router(artist_router)
     app.include_router(admin_router)
     app.include_router(follow_router)
+    app.include_router(order_router)
     return app
 
 

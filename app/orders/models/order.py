@@ -15,13 +15,13 @@ class Order(Base):
     user_id = Column(String(50), ForeignKey('users.id'), index=True)
     user = relationship("User", back_populates="orders")
 
-    order_date = Column(DateTimedefault=datetime.utcnow, index=True)
+    order_date = Column(DateTime, default=datetime.utcnow, index=True)
     total_price = Column(Float, index=True)
 
     shipping_address = Column(String(500), index=True)
     order_status = Column(sqltypes.Enum(OrderStatus), default=OrderStatus.PENDING, index=True)
 
-    artwork_id = Column(String(50), ForeignKey("artwork.id"), index=True)
+    artwork_id = Column(String(50), ForeignKey("artworks.id"), index=True)
     artwork = relationship("Artwork", back_populates="order")
 
     def __init__(self, user_id: str, order_date: datetime, total_price: float, shipping_address: str, artwork_id: str,
