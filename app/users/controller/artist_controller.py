@@ -2,14 +2,13 @@ from fastapi import HTTPException
 from pydantic import EmailStr
 from sqlalchemy.exc import IntegrityError
 from app.users.services import ArtistServices
-from app.users.enums import UserStatus
 
 
 class ArtistController:
     @staticmethod
     def create_artist(email: EmailStr, username: str, password: str):
         try:
-            return ArtistServices.create_artist(email, username, password, status=UserStatus.PENDING)
+            return ArtistServices.create_artist(email, username, password)
         except IntegrityError:
             raise HTTPException(status_code=409, detail="User already exists")
         except Exception as e:

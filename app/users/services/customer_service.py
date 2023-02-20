@@ -21,7 +21,7 @@ class CustomerServices:
     @repository_method_wrapper
     def create_customer(repository, name: str, email: str, password: str):
         """Creates a new customer in the system."""
-        return repository.create_artist(name, email, password, )
+        return repository.create_artist(name, email, password)
 
     @staticmethod
     @repository_method_wrapper

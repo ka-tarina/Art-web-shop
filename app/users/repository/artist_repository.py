@@ -13,8 +13,7 @@ class ArtistRepository:
     def create_artist(self, username: str, email: str, password: str, bio: str = "", website: str = ""):
         """Creates a new artist in the system."""
         try:
-            artist = Artist(username=username, email=email, password=password, status=UserStatus.ACTIVE, bio=bio,
-                            website=website)
+            artist = Artist(username=username, email=email, password=password, bio=bio, website=website)
             self.db.add(artist)
             self.db.commit()
             self.db.refresh(artist)
