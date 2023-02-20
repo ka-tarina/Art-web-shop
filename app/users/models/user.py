@@ -1,9 +1,10 @@
+from enum import Enum
 from uuid import uuid4
 from sqlalchemy import Boolean, Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import sqltypes
 from app.db.database import Base
-from app.users.models.user_enum import UserStatus, UserRole
+from app.users.enums import UserStatus, UserRole
 
 
 class User(Base):
@@ -13,8 +14,8 @@ class User(Base):
     username = Column(String(100), unique=True, index=True, nullable=False)
     email = Column(String(100), unique=True, index=True, nullable=False)
     password = Column(String(100), nullable=False)
-    status = Column(sqltypes.Enum(UserStatus), nullable=False)
-    role = Column(sqltypes.Enum(UserRole), nullable=False)
+    status = Column(sqltypes.Enum(UserStatus, native_enum=False), nullable=False)
+    role = Column(sqltypes.Enum(UserRole, native_enum=False), nullable=False)
 
     # Relationships with other tables
     artwork = relationship("Artwork", back_populates="user")
