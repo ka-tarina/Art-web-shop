@@ -1,9 +1,10 @@
+from uuid import uuid4
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import sqltypes
 from sqlalchemy.testing.schema import Column
-
-from app.users.models import User, UserRole
+from app.users.models import User
+from app.users.enums import UserRole
 
 
 class Admin(User):
@@ -11,3 +12,5 @@ class Admin(User):
     __tablename__ = "admins"
     id = Column(String(50), ForeignKey("users.id"), primary_key=True)
     role = Column(sqltypes.Enum(UserRole), default=UserRole.ADMIN)
+
+    user = relationship("User", backref="admin")

@@ -1,7 +1,8 @@
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey, ForeignKeyConstraint, String, Table
 from sqlalchemy.orm import relationship
-from app.users.models import User, UserRole
+from app.users.models import User
+from app.users.enums import UserRole
 
 
 artist_followers = Table(
