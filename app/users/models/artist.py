@@ -1,11 +1,12 @@
-"""Module for representing Artist in the system"""
-from sqlalchemy import Column, ForeignKey, String, Table
+from uuid import uuid4
+from sqlalchemy import Column, ForeignKey, ForeignKeyConstraint, String, Table
 from sqlalchemy.orm import relationship
 from app.users.models import User
-from app.users.enums import UserRole, UserStatus
+from app.users.enums import UserRole
 
-followers = Table(
-    "followers",
+
+artist_followers = Table(
+    "artist_followers",
     User.metadata,
     Column("artist_id", String(50), ForeignKey("users.id")),
     Column("customer_id", String(50), ForeignKey("users.id")),
@@ -22,25 +23,16 @@ class Artist(User):
     website = Column(String(100), nullable=True)
 
     # Relationships with other tables
-    artworks = relationship("Artwork", back_populates="artist")
-    user = relationship("User", back_populates="artist")
+    artwork = relationship("Artwork", back_populates="artist")
 
     followers = relationship(
         "Customer",
-        secondary=followers,
-        primaryjoin=(id == followers.c.artist_id),
-        secondaryjoin=(id == followers.c.customer_id),
-        back_populates="follows",
-        foreign_keys=[followers.c.artist_id, followers.c.customer_id]
+        secondary=artist_followers,
+        back_populates="followed_artists"
     )
-    #
-    # __mapper_args__ = {
-    #     'polymorphic_identity': 'artist'
-    # }
 
-    def __init__(self, username, email, password, bio="", website=""):
+    def __init__(self, username, email, password, status, bio="", website=""):
         """Initializes a new Artist object."""
-        super().__init__(username=username, email=email, password=password,
-                         status=UserStatus.ACTIVE, role=UserRole.ARTIST)
+        super().__init__(username=username, email=email, password=password, role=UserRole.ARTIST, status=status)
         self.bio = bio
         self.website = website
