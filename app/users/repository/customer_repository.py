@@ -2,7 +2,8 @@ from pydantic import UUID4
 from typing import Optional
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-from app.users.models import Customer, UserStatus, UserRole
+from app.users.models import Customer
+from app.users.enums import UserRole, UserStatus
 
 
 class CustomerRepository:

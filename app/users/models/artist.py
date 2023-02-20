@@ -23,7 +23,7 @@ class Artist(User):
     website = Column(String(100), nullable=True)
 
     # Relationships with other tables
-    artwork = relationship("Artwork", back_populates="artist")
+    artwork = relationship("Artwork", back_populates="artists")
 
     followers = relationship(
         "Customer",

@@ -2,7 +2,7 @@ import time
 from typing import Dict
 import jwt
 from app.config import settings
-from app.users.models import UserRole
+from app.users.enums import UserRole
 
 USER_SECRET = settings.USER_SECRET
 JWT_ALGORITHM = settings.ALGORITHM

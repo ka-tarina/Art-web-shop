@@ -2,7 +2,7 @@ import time
 from fastapi import HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt import PyJWTError
-from app.users.models import UserRole
+from app.users.enums import UserRole
 from app.users.services import UserAuthHandlerServices
 
 

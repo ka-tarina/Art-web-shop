@@ -1,5 +1,5 @@
 from app.db.database import SessionLocal
-from app.users.models import UserStatus
+from app.users.enums import UserStatus
 from app.users.repository import CustomerRepository
 
 

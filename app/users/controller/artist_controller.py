@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from pydantic import EmailStr
 from sqlalchemy.exc import IntegrityError
 from app.users.services import ArtistServices
-from app.users.models import UserStatus
+from app.users.enums import UserStatus
 
 
 class ArtistController:
