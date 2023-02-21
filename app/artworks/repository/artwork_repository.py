@@ -1,13 +1,13 @@
-"""Module for artwork repository."""
 from uuid import uuid4
+
 from sqlalchemy.orm import Session
+
 from app.artworks.models import Artwork
+from app.artworks.schemas import Currency
 
 
 class ArtworkRepository:
-    """A repository class for Artwork models."""
     def __init__(self, db: Session):
-        """Initializes a new instance of the ArtworkRepository class."""
         self.db = db
 
     def get_all_artworks(self):
@@ -23,7 +23,6 @@ class ArtworkRepository:
         return self.db.query(Artwork).filter(Artwork.name == artwork_name).first()
 
     def artwork_exists(self, name: str, description: str):
-        """Checks if artwork exists in the database."""
         return (
             self.db.query(Artwork).filter_by(name=name, description=description).first()
             is not None
@@ -37,7 +36,9 @@ class ArtworkRepository:
         image: str,
         stock: int,
         category_id: uuid4,
+        status: bool,
         artist_id: uuid4,
+        currency: Currency,
     ):
         """Creates a new artwork in the system."""
         try:
@@ -48,7 +49,9 @@ class ArtworkRepository:
                 image=image,
                 stock=stock,
                 category_id=category_id,
+                status=status,
                 artist_id=artist_id,
+                currency=currency,
             )
             self.db.add(artwork)
             self.db.commit()

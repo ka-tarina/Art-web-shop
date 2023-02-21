@@ -2,8 +2,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String, ForeignKey, Table
 from app.db.database import Base
 from app.users.models import User, Artist
-from app.users.enums import UserRole
-
+from app.users.enums import UserRole, UserStatus
 
 follows = Table(
     "follows",
@@ -30,5 +29,17 @@ class Customer(User):
         back_populates="followers",
         foreign_keys=[follows.c.customer_id, follows.c.artist_id]
     )
+    #
+    # __mapper_args__ = {
+    #     'polymorphic_identity': 'customer'
+    # }
 
-
+    def __init__(self, username, email, password):
+        """Initializes a new Customer object."""
+        super().__init__(
+            username=username,
+            email=email,
+            password=password,
+            status=UserStatus.ACTIVE,
+            role=UserRole.CUSTOMER,
+        )
