@@ -33,6 +33,10 @@ class Artist(User):
         back_populates="follows",
         foreign_keys=[followers.c.artist_id, followers.c.customer_id]
     )
+    #
+    # __mapper_args__ = {
+    #     'polymorphic_identity': 'artist'
+    # }
 
     def __init__(self, username, email, password, bio="", website=""):
         """Initializes a new Artist object."""

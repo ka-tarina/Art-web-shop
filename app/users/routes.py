@@ -1,14 +1,21 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.exc import IntegrityError
 
-from app.users.controller import CustomerController, ArtistController, AdminController, FollowController, \
-    SuperUserController
+from app.users.controller import (
+    AdminController,
+    ArtistController,
+    CustomerController,
+    FollowController,
+    SuperUserController,
+)
 from app.users.controller.user_auth_controller import JWTBearer
+
 # from app.users.controller import SuperUserController
 # from app.users.controller.user_auth_controller import JWTBearer
 from app.users.controller.user_controller import UserController
 from app.users.schemas import *
-from app.users.services import SuperUserServices, ArtistServices
+from app.users.services import ArtistServices, SuperUserServices
+
 #
 # user_router = APIRouter(tags=["users"], prefix="/api/users")
 # #
@@ -83,7 +90,7 @@ async def update_customer_status(user_id: str, status: UserStatus):
 
 @customer_router.get("/read-customer-by-email/{email}")
 async def read_customer_by_email(email: str):
-    customer = CustomerController.read_customer_by_email(email)
+    customer = CustomerController.get_customer_by_email(email)
     return customer
 
 
@@ -91,31 +98,33 @@ superuser_router = APIRouter(tags=["superusers"], prefix="/api/superusers")
 
 
 @superuser_router.post("/create-superuser")
-def create_superuser(username: str, email: EmailStr, password: str):
-    superuser = SuperUserController.create_superuser(username=username, email=email, password=password)
+async def create_superuser(username: str, email: EmailStr, password: str):
+    superuser = SuperUserController.create_superuser(
+        username=username, email=email, password=password
+    )
     return superuser
 
 
-@superuser_router.post("/create-from-existing-user")
-def create_superuser_from_existing_user(user_id: str):
-    superuser = SuperUserController.create_superuser_from_existing_user(user_id=user_id)
-    return superuser
+# @superuser_router.post("/create-from-existing-user")
+# def create_superuser_from_existing_user(user_id: str):
+#     superuser = SuperUserController.create_superuser_from_existing_user(user_id=user_id)
+#     return superuser
 
 
 @superuser_router.get("/get-superuser-by-id/{superuser_id}")
-def get_superuser_by_id(superuser_id: str):
+async def get_superuser_by_id(superuser_id: str):
     superuser = SuperUserController.get_superuser_by_id(superuser_id)
     return superuser
 
 
 @superuser_router.get("/get-all-superusers")
-def get_all_superusers():
+async def get_all_superusers():
     superusers = SuperUserController.get_all_superusers()
     return superusers
 
 
 @superuser_router.delete("/delete-superuser-by-id/{superuser_id}")
-def delete_superuser_by_id(superuser_id: str):
+async def delete_superuser_by_id(superuser_id: str):
     SuperUserController.delete_superuser_by_id(superuser_id=superuser_id)
 
 
@@ -167,22 +176,24 @@ async def delete_artist_by_id(artist_id: str):
 admin_router = APIRouter(tags=["admins"], prefix="/api/admins")
 
 
-@admin_router.post("create-admin")
-async def create_admin(username: str, email: EmailStr, password: str):
-    return AdminController.create_admin(username, email, password)
+@admin_router.post("/create-admin", response_model=AdminSchema)
+async def create_admin(admin: AdminSchemaIn):
+    return AdminController.create_admin(admin.username, admin.email, admin.password)
 
 
-@admin_router.post("/create-admin-from-existing-user/{user_id}")
-async def create_admin_from_existing_user(user_id: str):
-    return AdminController.create_admin_from_existing_user(user_id)
+# @admin_router.post(
+#     "/create-admin-from-existing-user/{user_id}", response_model=AdminSchema
+# )
+# async def create_admin_from_existing_user(user_id: str):
+#     return AdminController.create_admin_from_existing_user(user_id)
 
 
-@admin_router.get("/get-admin-by-id/{admin_id}")
+@admin_router.get("/get-admin-by-id/{admin_id}", response_model=AdminSchema)
 async def get_admin_by_id(admin_id: str):
     return AdminController.get_admin_by_id(admin_id)
 
 
-@admin_router.get("get-all-admins")
+@admin_router.get("/get-all-admins", response_model=list[AdminSchema])
 async def get_all_admins():
     return AdminController.get_all_admins()
 

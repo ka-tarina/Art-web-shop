@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from fastapi import HTTPException, Response
+
 from app.artworks.exceptions import ArtworkExceptionCode, ArtworkNotFoundException
 from app.artworks.schemas import Currency
 from app.artworks.services import ArtworkService
@@ -8,12 +9,29 @@ from app.artworks.services import ArtworkService
 
 class ArtworkController:
     @staticmethod
-    def create_new_artwork(name: str, description: str, price: float, image: str, stock: int,
-                           category_id: uuid4, status: bool, artist_id: uuid4, currency: Currency):
+    def create_new_artwork(
+        name: str,
+        description: str,
+        price: float,
+        image: str,
+        stock: int,
+        category_id: uuid4,
+        status: bool,
+        artist_id: uuid4,
+        currency: Currency,
+    ):
         try:
-            artwork = ArtworkService.create_artwork(name=name, description=description, price=price, image=image,
-                                                    stock=stock, category_id=category_id, status=status,
-                                                    artist_id=artist_id, currency=currency)
+            artwork = ArtworkService.create_artwork(
+                name=name,
+                description=description,
+                price=price,
+                image=image,
+                stock=stock,
+                category_id=category_id,
+                status=status,
+                artist_id=artist_id,
+                currency=currency,
+            )
             return artwork
         except ArtworkExceptionCode as e:
             print(e)
@@ -53,7 +71,9 @@ class ArtworkController:
         try:
             artwork = ArtworkService.get_artwork_by_id(artwork_id)
             if not artwork:
-                raise ArtworkNotFoundException(f"Artwork with ID {artwork_id} not found.", code=400)
+                raise ArtworkNotFoundException(
+                    f"Artwork with ID {artwork_id} not found.", code=400
+                )
             return ArtworkService.get_stock_by_artwork_id(artwork_id)
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
@@ -75,8 +95,9 @@ class ArtworkController:
     @staticmethod
     def update_artwork(artwork_id: str, artwork_attribute: str, value):
         try:
-            artwork = ArtworkService.update_artwork(artwork_id=artwork_id, artwork_attribute=artwork_attribute,
-                                                    value=value)
+            artwork = ArtworkService.update_artwork(
+                artwork_id=artwork_id, artwork_attribute=artwork_attribute, value=value
+            )
             return artwork
         except ArtworkNotFoundException as e:
             print(e)
@@ -87,7 +108,9 @@ class ArtworkController:
     @staticmethod
     def get_artworks_in_price_range(min_price: float, max_price: float):
         try:
-            artworks = ArtworkService.get_artworks_in_price_range(min_price=min_price, max_price=max_price)
+            artworks = ArtworkService.get_artworks_in_price_range(
+                min_price=min_price, max_price=max_price
+            )
             return artworks
         except Exception as e:
             raise Exception(f"Error retrieving artworks: {str(e)}")

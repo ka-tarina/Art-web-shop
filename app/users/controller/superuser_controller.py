@@ -1,33 +1,38 @@
 from fastapi import HTTPException
 from pydantic import EmailStr
 from sqlalchemy.exc import IntegrityError
-from app.users.services import SuperUserServices
+
+from app.users.services import SuperUserServices, UserServices
 
 
 class SuperUserController:
     @staticmethod
     def create_superuser(username: str, email: EmailStr, password: str):
         try:
-            superuser = SuperUserServices.create_superuser(username=username, email=email, password=password)
-            return superuser
-        except IntegrityError:
-            raise HTTPException(
-                status_code=400,
-                detail=f"Superuser with provided email - {email} already exists.",
+            user_exist = UserServices.get_user_by_email(email=email)
+            if user_exist:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"User with provided email - {email} already exists.",
+                )
+            return SuperUserServices.create_superuser(
+                username=username, email=email, password=password
             )
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
-    @staticmethod
-    def create_superuser_from_existing_user(user_id: str):
-        try:
-            superuser = SuperUserServices.create_superuser_from_existing_user(user_id=user_id)
-            return superuser
-        except Exception as e:
-            raise HTTPException(
-                status_code=400,
-                detail=f"User with provided ID {user_id} does not exist"
-            )
+    # @staticmethod
+    # def create_superuser_from_existing_user(user_id: str):
+    #     try:
+    #         superuser = SuperUserServices.create_superuser_from_existing_user(
+    #             user_id=user_id
+    #         )
+    #         return superuser
+    #     except Exception as e:
+    #         raise HTTPException(
+    #             status_code=400,
+    #             detail=f"User with provided ID {user_id} does not exist",
+    #         )
 
     @staticmethod
     def get_superuser_by_id(superuser_id: str):

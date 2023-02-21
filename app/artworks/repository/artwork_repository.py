@@ -1,5 +1,7 @@
 from uuid import uuid4
+
 from sqlalchemy.orm import Session
+
 from app.artworks.models import Artwork
 from app.artworks.schemas import Currency
 
@@ -21,21 +23,36 @@ class ArtworkRepository:
         return self.db.query(Artwork).filter(Artwork.name == artwork_name).first()
 
     def artwork_exists(self, name: str, description: str):
-        return self.db.query(Artwork).filter_by(name=name, description=description).first() is not None
+        return (
+            self.db.query(Artwork).filter_by(name=name, description=description).first()
+            is not None
+        )
 
-    def create_artwork(self,
-                       name: str,
-                       description: str,
-                       price: float,
-                       image: str,
-                       stock: int,
-                       category_id: uuid4,
-                       status: bool,
-                       artist_id: uuid4,
-                       currency: Currency):
+    def create_artwork(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        image: str,
+        stock: int,
+        category_id: uuid4,
+        status: bool,
+        artist_id: uuid4,
+        currency: Currency,
+    ):
         """Creates a new artwork in the system."""
         try:
-            artwork = Artwork(name, description, price, image, stock, category_id, status, artist_id, currency)
+            artwork = Artwork(
+                name=name,
+                description=description,
+                price=price,
+                image=image,
+                stock=stock,
+                category_id=category_id,
+                status=status,
+                artist_id=artist_id,
+                currency=currency,
+            )
             self.db.add(artwork)
             self.db.commit()
             self.db.refresh(artwork)
@@ -55,10 +72,21 @@ class ArtworkRepository:
 
     def update_artwork(self, artwork_id: str, artwork_attribute: str, value):
         """Updates an attribute of the artwork."""
-        allowed_attributes = ['name', 'description', 'price', 'image', 'stock',
-                              'category_id', 'status', 'artist_id', 'currency']
+        allowed_attributes = [
+            "name",
+            "description",
+            "price",
+            "image",
+            "stock",
+            "category_id",
+            "status",
+            "artist_id",
+            "currency",
+        ]
         if artwork_attribute not in allowed_attributes:
-            raise ValueError(f"Invalid field '{artwork_attribute}', allowed fields: {allowed_attributes}")
+            raise ValueError(
+                f"Invalid field '{artwork_attribute}', allowed fields: {allowed_attributes}"
+            )
         artwork = self.get_artwork_by_id(artwork_id)
         if artwork:
             setattr(artwork, artwork_attribute, value)
@@ -69,7 +97,11 @@ class ArtworkRepository:
 
     def get_artworks_in_price_range(self, min_price: float, max_price: float):
         """Returns a list of artworks within the given price range."""
-        artworks = self.db.query(Artwork).filter(Artwork.price >= min_price, Artwork.price <= max_price).all()
+        artworks = (
+            self.db.query(Artwork)
+            .filter(Artwork.price >= min_price, Artwork.price <= max_price)
+            .all()
+        )
         if not artworks:
             return None
         return artworks
