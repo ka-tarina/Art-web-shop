@@ -3,7 +3,7 @@ from pydantic import EmailStr
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from app.users.models import User
-from app.users.enums import  UserRole, UserStatus
+from app.users.enums import UserRole, UserStatus
 
 
 class UserRepository:
@@ -104,10 +104,10 @@ class UserRepository:
         except Exception as e:
             raise e
 
-    def update_user_status(self, username_id_email: str, status: UserStatus):
+    def update_user_status(self, user_id: str, status: UserStatus):
         """Updates the status of the user."""
         try:
-            user = self.get_user_by_username_or_id_or_email(username_id_email)
+            user = self.get_user_by_id(user_id)
             user.status = status
             self.db.add(user)
             self.db.commit()

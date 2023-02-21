@@ -19,14 +19,10 @@ def repository_method_wrapper(func):
 
 class UserServices:
     @staticmethod
-    def create_user(username, email, password: str):
-        with SessionLocal() as db:
-            try:
-                user_repository = UserRepository(db)
-                hashed_password = hashlib.sha256(bytes(password, "utf-8")).hexdigest()
-                return user_repository.create_user(username=username, email=email, password=hashed_password)
-            except Exception as e:
-                raise e
+    @repository_method_wrapper
+    def create_user(repository, username, email, password: str):
+        hashed_password = hashlib.sha256(bytes(password, "utf-8")).hexdigest()
+        return repository.create_user(username=username, email=email, password=hashed_password)
 
     @staticmethod
     @repository_method_wrapper

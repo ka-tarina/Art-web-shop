@@ -32,9 +32,9 @@ class CategoryController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_category_by_name(category_name: str):
+    def get_category_by_name(name: str):
         try:
-            category = CategoryService.get_category_by_name(category_name)
+            category = CategoryService.get_category_by_name(name)
             return category
         except CategoryNotFoundException as e:
             print(e)

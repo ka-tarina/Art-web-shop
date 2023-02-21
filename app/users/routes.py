@@ -1,57 +1,59 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.exc import IntegrityError
 
-from app.users.controller import CustomerController, ArtistController, AdminController, FollowController
+from app.users.controller import CustomerController, ArtistController, AdminController, FollowController, \
+    SuperUserController
 from app.users.controller.user_auth_controller import JWTBearer
 # from app.users.controller import SuperUserController
 # from app.users.controller.user_auth_controller import JWTBearer
 from app.users.controller.user_controller import UserController
 from app.users.schemas import *
 from app.users.services import SuperUserServices, ArtistServices
+#
+# user_router = APIRouter(tags=["users"], prefix="/api/users")
+# #
+#
+# @user_router.post("/add-new-user", response_model=UserSchema)
+# def create_user(user: UserSchemaIn):
+#     return UserController.create_user(user.name, user.email, user.password)
+#
+#
+# # @user_router.post("/add-new-super-user", response_model=SuperUser,) #dependencies=[Depends(JWTBearer("super_user"))])
+# # def create_superuser(superuser: SuperUserCreate):
+# #     return UserController.create_superuser(superuser=superuser)
 
-user_router = APIRouter(tags=["users"], prefix="/api/users")
+#
+#
+# @user_router.post("/login")
+# def login_user(user: UserSchemaIn):
+#     return UserController.login_user(user.email, user.password)
+#
 
-
-@user_router.post("/add-new-user", response_model=UserSchema)
-def create_user(user: UserSchemaIn):
-    return UserController.create_user(user.name, user.email, user.password)
-
-
-# @user_router.post("/add-new-super-user", response_model=SuperUser,) #dependencies=[Depends(JWTBearer("super_user"))])
-# def create_superuser(superuser: SuperUserCreate):
-#     return UserController.create_superuser(superuser=superuser)
-
-
-@user_router.post("/login")
-def login_user(user: UserSchemaIn):
-    return UserController.login_user(user.email, user.password)
-
-
-@user_router.get("/id", response_model=UserSchema)
-def get_user_by_id(user_id: str):
-    return UserController.get_user_by_id(user_id)
-
-
-@user_router.get("/get-all-users", response_model=list[UserSchema], dependencies=[Depends(JWTBearer(UserRole.SUPERUSER))])
-def get_all_users():
-    return UserController.get_all_users()
-
-
-@user_router.delete("/", dependencies=[Depends(JWTBearer(UserRole.SUPERUSER))])
-def delete_user_by_id(user_id: str):
-    return UserController.delete_user_by_id(user_id)
-
-
-# @user_router.put("/update/is_active", response_model=UserSchema)
-# def update_user(user_id: str, is_active: bool):
-#     return UserController.update_user_is_active(user_id, is_active)
+# @user_router.get("/id", response_model=UserSchema)
+# def get_user_by_id(user_id: str):
+#     return UserController.get_user_by_id(user_id)
+#
+#
+# @user_router.get("/get-all-users", response_model=list[UserSchema], dependencies=[Depends(JWTBearer(UserRole.SUPERUSER))])
+# def get_all_users():
+#     return UserController.get_all_users()
+#
+#
+# @user_router.delete("/", dependencies=[Depends(JWTBearer(UserRole.SUPERUSER))])
+# def delete_user_by_id(user_id: str):
+#     return UserController.delete_user_by_id(user_id)
+#
+#
+# # @user_router.put("/update/is_active", response_model=UserSchema)
+# # def update_user(user_id: str, is_active: bool):
+# #     return UserController.update_user_is_active(user_id, is_active)
 
 customer_router = APIRouter(tags=["customers"], prefix="/api/customers")
 
 
-@customer_router.post("create-customer")
+@customer_router.post("/create-customer")
 async def create_customer(name: str, email: EmailStr, password: str):
-    customer = CustomerController.create_customer(name, email, password, )
+    customer = CustomerController.create_customer(name, email, password)
     return customer
 
 
@@ -59,6 +61,12 @@ async def create_customer(name: str, email: EmailStr, password: str):
 async def get_all_customers():
     customers = CustomerController.get_all_customers()
     return customers
+
+
+@customer_router.get("/get-customer-by-id/{customer_id}")
+def get_customer_by_id(customer_id: str):
+    customer = CustomerController.get_customer_by_id(customer_id=customer_id)
+    return customer
 
 
 @customer_router.delete("/delete-customer-by-id/{customer_id}")
@@ -78,73 +86,45 @@ async def read_customer_by_email(email: str):
     customer = CustomerController.read_customer_by_email(email)
     return customer
 
-#  get customer by id missing
 
 superuser_router = APIRouter(tags=["superusers"], prefix="/api/superusers")
 
 
 @superuser_router.post("/create-superuser")
 def create_superuser(username: str, email: EmailStr, password: str):
-    try:
-        superuser = SuperUserServices.create_superuser(username=username, email=email, password=password)
-        return superuser
-    except IntegrityError:
-        raise HTTPException(
-                status_code=400,
-                detail=f"Superuser with provided email - {email} already exists.",
-                )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    superuser = SuperUserController.create_superuser(username=username, email=email, password=password)
+    return superuser
 
 
 @superuser_router.post("/create-from-existing-user")
 def create_superuser_from_existing_user(user_id: str):
-    try:
-        superuser = SuperUserServices.create_superuser_from_existing_user(user_id=user_id)
-        return superuser
-    except Exception:
-        raise HTTPException(
-                status_code=400,
-                detail=f"User with provided ID {user_id} does not exist"
-                )
+    superuser = SuperUserController.create_superuser_from_existing_user(user_id=user_id)
+    return superuser
 
 
 @superuser_router.get("/get-superuser-by-id/{superuser_id}")
 def get_superuser_by_id(superuser_id: str):
-    superuser = SuperUserServices.get_superuser_by_id(superuser_id)
-    if superuser:
-        return superuser
-    else:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Superuser with provided id {superuser_id} does not exist",
-            )
+    superuser = SuperUserController.get_superuser_by_id(superuser_id)
+    return superuser
 
 
 @superuser_router.get("/get-all-superusers")
 def get_all_superusers():
-    superusers = SuperUserServices.get_all_superusers()
+    superusers = SuperUserController.get_all_superusers()
     return superusers
 
 
 @superuser_router.delete("/delete-superuser-by-id/{superuser_id}")
 def delete_superuser_by_id(superuser_id: str):
-    try:
-        deleted = SuperUserServices.get_superuser_by_id(superuser_id)
-        if not deleted:
-            raise HTTPException(status_code=404, detail="User not found")
-        SuperUserServices.delete_superuser_by_id(superuser_id)
-        return {"detail": "Superuser deleted successfully"}
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    SuperUserController.delete_superuser_by_id(superuser_id=superuser_id)
 
 
 artist_router = APIRouter(tags=["artists"], prefix="/api/artists")
 
 
 @artist_router.post("/create-artist")
-async def create_artist(email: EmailStr, username: str, password: str):
-    artist = ArtistController.create_artist(email, username, password)
+async def create_artist(username: str, email: EmailStr, password: str, bio, website):
+    artist = ArtistController.create_artist(username, email, password, bio, website)
     return artist
 
 

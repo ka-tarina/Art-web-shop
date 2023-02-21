@@ -28,9 +28,9 @@ class CategoryRepository:
             raise ValueError("Category not found.")
         return category
 
-    def get_category_by_name(self, category_name: str):
+    def get_category_by_name(self, name: str):
         """Gets a category from the database by its name."""
-        category = self.db.query(Category).filter(Category.name == category_name).first()
+        category = self.db.query(Category).filter(Category.name == name).first()
         if not category:
             raise ValueError("Category not found.")
         return category

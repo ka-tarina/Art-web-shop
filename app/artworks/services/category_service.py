@@ -27,7 +27,7 @@ class CategoryService:
     @staticmethod
     @repository_method_wrapper
     def get_category_by_name(repository, name: str):
-        return repository.get_category_by_username(name=name)
+        return repository.get_category_by_name(name=name)
 
     @staticmethod
     @repository_method_wrapper
