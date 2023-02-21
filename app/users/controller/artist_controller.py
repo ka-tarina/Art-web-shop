@@ -6,9 +6,9 @@ from app.users.services import ArtistServices
 
 class ArtistController:
     @staticmethod
-    def create_artist(email: EmailStr, username: str, password: str):
+    def create_artist(username: str, email: EmailStr, password: str, bio: str = "", website: str = ""):
         try:
-            return ArtistServices.create_artist(email, username, password)
+            return ArtistServices.create_artist(username, email, password, bio, website)
         except IntegrityError:
             raise HTTPException(status_code=409, detail="User already exists")
         except Exception as e:
@@ -27,7 +27,7 @@ class ArtistController:
     @staticmethod
     def get_artist_by_username(username: str):
         try:
-            artist = ArtistServices.get_artist_by_id(username)
+            artist = ArtistServices.get_artist_by_username(username)
             if not artist:
                 raise HTTPException(status_code=404, detail="Artist not found")
             return artist
