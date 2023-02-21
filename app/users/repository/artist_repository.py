@@ -61,13 +61,10 @@ class ArtistRepository:
         except Exception as e:
             raise e
 
-    def delete_artist(self, artist_id: str):
+    def delete_artist_by_id(self, artist_id: str):
         """Deletes an artist from the system."""
-        try:
-            artist = self.get_artist_by_id(artist_id)
-
-            self.db.delete(artist)
-            self.db.commit()
-            return True
-        except Exception as e:
-            raise e
+        artist = self.get_artist_by_id(artist_id)
+        if not artist:
+            return None
+        self.db.delete(artist)
+        self.db.commit()

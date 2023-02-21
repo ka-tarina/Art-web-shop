@@ -19,7 +19,8 @@ class User(Base):
 
     # Relationships with other tables
     artwork = relationship("Artwork", back_populates="artist")
-    orders = relationship("Order", back_populates="user")
+    orders = relationship("Order", back_populates="customer")
+
     superuser = relationship("SuperUser", uselist=False, back_populates="user")
     admin = relationship("Admin", uselist=False, back_populates="user")
     artist = relationship("Artist", uselist=False, back_populates="user")

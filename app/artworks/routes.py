@@ -21,8 +21,8 @@ async def get_category_by_id(category_id: str):
 
 
 @category_router.get("/get-category_by_name")
-async def get_category_by_name(category_name: str):
-    return CategoryController.get_category_by_name(category_name)
+async def get_category_by_name(name: str):
+    return CategoryController.get_category_by_name(name)
 
 
 @category_router.delete("/delete-category")

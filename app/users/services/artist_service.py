@@ -1,10 +1,8 @@
-"""Module for artist service."""
 from app.db.database import SessionLocal
 from app.users.repository import ArtistRepository, UserRepository
 
 
 def repository_method_wrapper(func):
-    """Automatically handles database sessions and exceptions."""
     def wrapper(*args, **kwargs):
         with SessionLocal() as db:
             try:
@@ -20,18 +18,9 @@ class ArtistServices:
 
     @staticmethod
     @repository_method_wrapper
-    def create_artist(repository,
-                      username: str,
-                      email: str,
-                      password: str,
-                      bio: str = "",
-                      website: str = ""):
+    def create_artist(repository, username: str, email: str, password: str, bio: str = "", website: str = ""):
         """Creates a new artist in the system."""
-        return repository.create_artist(username=username,
-                                        email=email,
-                                        password=password,
-                                        bio=bio,
-                                        website=website)
+        return repository.create_artist(username=username, email=email, password=password, bio=bio, website=website)
 
     @staticmethod
     @repository_method_wrapper
@@ -48,6 +37,7 @@ class ArtistServices:
                 user = user_repository.get_user_by_username(username=username)
                 if user.role == "artist":
                     return user
+                raise Exception(f"Artist with username {username} not found")
             except Exception as e:
                 raise e
 
