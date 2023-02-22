@@ -1,15 +1,15 @@
+"""Module for order service."""
 from datetime import datetime
-from typing import List, Optional
-from uuid import uuid4
-
+from typing import Optional
 from app.artworks.repository import ArtworkRepository
 from app.orders.models import OrderStatus
 from app.orders.repository import OrderRepository
-from app.orders.exceptions import OrderExceptionCode, OrderNotFoundException, InvalidOrderStatusError
+from app.orders.exceptions import OrderExceptionCode, InvalidOrderStatusError
 from app.db import SessionLocal
 
 
 def repository_method_wrapper(func):
+    """Automatically handles database sessions and exceptions."""
     def wrapper(*args, **kwargs):
         with SessionLocal() as db:
             try:
@@ -32,21 +32,22 @@ class OrderService:
             try:
                 artwork_repository = ArtworkRepository(db)
                 order_repository = OrderRepository(db)
-                order_date = datetime.now()
-                order_status = OrderStatus.PENDING
                 artwork = order_repository.get_order_by_artwork_id(artwork_id)
                 if not artwork:
-                    raise OrderExceptionCode(message=f"Order for artwork already exists.", code=400)
+                    raise OrderExceptionCode(
+                        message=f"Order for artwork with ID {artwork_id} already exists.",
+                        code=400)
+
                 stock = artwork_repository.get_stock_by_id(artwork_id=artwork_id)
                 if stock <= 0:
-                    raise InvalidOrderStatusError(f"Artwork with ID {artwork_id} is out of stock.", code=400)
+                    raise InvalidOrderStatusError(
+                        f"Artwork with ID {artwork_id} is out of stock.", code=400
+                    )
                 total_price = artwork.price + shipping
                 return order_repository.create_order(user_id=user_id,
-                                                     order_date=order_date,
                                                      total_price=total_price,
                                                      shipping_address=shipping_address,
-                                                     artwork_id=artwork_id,
-                                                     order_status=order_status)
+                                                     artwork_id=artwork_id)
             except Exception as e:
                 raise e
 
@@ -76,6 +77,7 @@ class OrderService:
     @staticmethod
     @repository_method_wrapper
     def get_orders_in_date_range(repository, from_date: datetime, to_date: datetime):
+        """Gets orders in given date range"""
         orders = repository.get_orders_in_date_range(from_date, to_date)
         return [order.as_dict() for order in orders]
 
@@ -88,6 +90,7 @@ class OrderService:
 
     @staticmethod
     def get_artist_summary_report(from_date: datetime, to_date: datetime, artist_id: str):
+        """Gets summary report of orders made for artist in given date range."""
         with SessionLocal() as db:
             try:
                 repository = OrderRepository(db)

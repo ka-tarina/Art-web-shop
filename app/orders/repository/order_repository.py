@@ -1,3 +1,4 @@
+"""Module for order repository."""
 from datetime import datetime
 from typing import Optional
 from sqlalchemy.exc import IntegrityError
@@ -13,19 +14,15 @@ class OrderRepository:
 
     def create_order(self,
                      user_id: str,
-                     order_date: datetime,
                      total_price: float,
                      shipping_address: str,
-                     artwork_id: str,
-                     order_status: OrderStatus = OrderStatus.PENDING):
+                     artwork_id: str):
         """Creates a new order in the database"""
         try:
             order = Order(user_id=user_id,
-                          order_date=order_date,
                           total_price=total_price,
                           shipping_address=shipping_address,
-                          artwork_id=artwork_id,
-                          order_status=order_status)
+                          artwork_id=artwork_id)
             self.db.add(order)
             self.db.commit()
             return order
@@ -51,7 +48,9 @@ class OrderRepository:
         except Exception as e:
             raise e
 
-    def get_orders_by_user_or_status(self, user_id: Optional[str] = None, order_status: Optional[OrderStatus] = None):
+    def get_orders_by_user_or_status(self,
+                                     user_id: Optional[str] = None,
+                                     order_status: Optional[OrderStatus] = None):
         """Gets a list of orders matching the specified criteria."""
         try:
             query = self.db.query(Order)
@@ -63,9 +62,13 @@ class OrderRepository:
         except Exception as e:
             raise e
 
-    def get_orders_in_date_range(self, from_date: datetime, to_date: datetime):
+    def get_orders_in_date_range(self,
+                                 from_date: datetime,
+                                 to_date: datetime):
+        """Gets orders in given range of dates."""
         try:
-            return self.db.query(Order).filter(Order.order_date >= from_date, Order.order_date <= to_date).all()
+            return self.db.query(Order).\
+                filter(Order.order_date >= from_date, Order.order_date <= to_date).all()
         except Exception as e:
             raise e
 

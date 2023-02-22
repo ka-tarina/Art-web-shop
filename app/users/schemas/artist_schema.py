@@ -1,11 +1,11 @@
+"""Module for artist schemas."""
 from pydantic import UUID4, BaseModel, EmailStr
 from pydantic.schema import Optional
-
 from app.users.enums import UserRole, UserStatus
 
 
 class ArtistSchema(BaseModel):
-    """Base model for representing an Artist."""
+    """A schema representing an Admin stored in the database"""
     id: UUID4
     username: str
     email: EmailStr
@@ -15,6 +15,7 @@ class ArtistSchema(BaseModel):
     role: UserRole
 
     class Config:
+        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True
 
 
@@ -27,6 +28,7 @@ class ArtistSchemaUpdate(BaseModel):
     website: Optional[str]
 
     class Config:
+        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True
 
 
@@ -39,6 +41,7 @@ class ArtistSchemaIn(BaseModel):
     website: str = ""
 
     class Config:
+        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True
 
 
@@ -52,4 +55,5 @@ class ArtistSchemaOut(BaseModel):
     role: UserRole
 
     class Config:
+        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True

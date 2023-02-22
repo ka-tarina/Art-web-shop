@@ -1,3 +1,7 @@
+"""
+Module creates a database session and an engine
+object for connecting to the MySQL database.
+"""
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from app.config import settings
@@ -7,16 +11,13 @@ MYSQL_URL = f"{settings.DB_HOST}://{settings.DB_USER}:{settings.DB_PASSWORD}@" \
 
 engine = create_engine(MYSQL_URL, echo=True)
 
-# existing_databases = engine.execute("SHOW DATABASES;")
-# existing_databases = [d[0] for d in existing_databases]
-# print(existing_databases)
-
 SessionLocal = sessionmaker(autocommit=False, autoflush=True, bind=engine)
 
 Base = declarative_base()
 
 
 def get_db():
+    """A generator function that returns a database session object."""
     db = SessionLocal()
     try:
         yield db
