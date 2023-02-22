@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from fastapi import HTTPException
 from pydantic import EmailStr
 from sqlalchemy.exc import IntegrityError
@@ -42,7 +44,7 @@ class ArtistController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def update_artist_bio(artist_id: str, bio: str):
+    def update_artist_bio(artist_id: uuid4, bio: str):
         try:
             ArtistServices.update_artist_bio(artist_id, bio)
             return {"detail": "Artist bio updated successfully"}
@@ -50,7 +52,7 @@ class ArtistController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def update_artist_website(artist_id: str, website: str):
+    def update_artist_website(artist_id: uuid4, website: str):
         try:
             ArtistServices.update_artist_bio(artist_id, website)
             return {"detail": "Artist bio updated successfully"}

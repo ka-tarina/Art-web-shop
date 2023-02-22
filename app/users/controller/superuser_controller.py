@@ -21,18 +21,18 @@ class SuperUserController:
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
-    # @staticmethod
-    # def create_superuser_from_existing_user(user_id: str):
-    #     try:
-    #         superuser = SuperUserServices.create_superuser_from_existing_user(
-    #             user_id=user_id
-    #         )
-    #         return superuser
-    #     except Exception as e:
-    #         raise HTTPException(
-    #             status_code=400,
-    #             detail=f"User with provided ID {user_id} does not exist",
-    #         )
+    @staticmethod
+    def create_superuser_from_existing_user(user_id: str):
+        try:
+            superuser = SuperUserServices.create_superuser_from_existing_user(
+                user_id=user_id
+            )
+            return superuser
+        except Exception as e:
+            raise HTTPException(
+                status_code=400,
+                detail=f"User with provided ID {user_id} does not exist",
+            )
 
     @staticmethod
     def get_superuser_by_id(superuser_id: str):

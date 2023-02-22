@@ -1,39 +1,33 @@
-"""Model for follow controller"""
-from uuid import uuid4
-
 from fastapi import HTTPException
+
 from app.users.schemas import ArtistSchema
 from app.users.services import FollowServices
 
 
 class FollowController:
     @staticmethod
-    def follow_artist(customer_id: uuid4, artist_id: uuid4):
-        """Follow an artist with the specified IDs."""
+    def follow_artist(customer_id: str, artist_id: str):
         try:
             return FollowServices.follow_artist(customer_id, artist_id)
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def unfollow_artist(customer_id: uuid4, artist_id: uuid4):
-        """Unfollow an artist with the specified IDs"""
+    def unfollow_artist(customer_id: str, artist_id: str):
         try:
             return FollowServices.unfollow_artist(customer_id, artist_id)
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_following_artists(customer_id: uuid4):
-        """Get the artists that a customer is following."""
+    def get_following_artists(customer_id: str):
         try:
             return FollowServices.get_following_artists(customer_id)
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_followers(artist_id: uuid4):
-        """Get the followers of an artist with the specified ID."""
+    def get_followers(artist_id: str):
         try:
             return FollowServices.get_followers(artist_id)
         except Exception as e:
@@ -41,7 +35,6 @@ class FollowController:
 
     @staticmethod
     def get_artists_by_followers(limit: int):
-        """Get a list of artists with the number of followers, sorted by the number of followers."""
         try:
             artists = FollowServices.get_artists_by_followers(limit)
             total_followers = sum(artist.followers for artist in artists)

@@ -26,17 +26,17 @@ class SuperUserRepository(UserRepository):
         except Exception as e:
             raise e
 
-    # def create_superuser_from_existing_user(self, user_id: str):
-    #     """Creates a superuser from an existing user."""
-    #     try:
-    #         user = self.get_user_by_id(user_id=user_id)
-    #         superuser = SuperUser(username=user.username, email=user.email, password=user.password)
-    #         self.db.add(superuser)
-    #         self.db.commit()
-    #         self.db.refresh(superuser)
-    #         return superuser
-    #     except Exception as e:
-    #         raise e
+    def create_superuser_from_existing_user(self, user_id: str):
+        """Creates a superuser from an existing user."""
+        try:
+            user = self.get_user_by_id(user_id=user_id)
+            superuser = SuperUser(username=user.username, email=user.email, password=user.password)
+            self.db.add(superuser)
+            self.db.commit()
+            self.db.refresh(superuser)
+            return superuser
+        except Exception as e:
+            raise e
 
     def get_superuser_by_id(self, superuser_id: str):
         """Gets a superuser from the database by their ID."""

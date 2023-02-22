@@ -26,13 +26,13 @@ class AdminRepository(UserRepository):
         except Exception as e:
             raise e
 
-    # def create_admin_from_existing_user(self, user_id: str):
-    #     """Creates an admin from an existing user."""
-    #     try:
-    #         admin = self.update_user_role(user_id=user_id, role=UserRole.ADMIN)
-    #         return admin
-    #     except Exception as e:
-    #         raise e
+    def create_admin_from_existing_user(self, user_id: str):
+        """Creates an admin from an existing user."""
+        try:
+            admin = self.update_user_role(user_id=user_id, role=UserRole.ADMIN)
+            return admin
+        except Exception as e:
+            raise e
 
     def get_admin_by_id(self, admin_id: str):
         """Gets a superuser from the database by their ID."""
