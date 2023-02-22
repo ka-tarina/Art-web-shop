@@ -9,7 +9,7 @@ class SuperUserSchema(BaseModel):
     """Base model for representing a Superuser."""
 
     id: UUID4
-    name: str
+    username: str
     email: str
     password: str
     status: UserStatus = UserStatus.ACTIVE
@@ -22,7 +22,7 @@ class SuperUserSchema(BaseModel):
 class SuperUserSchemaIn(BaseModel):
     """A schema representing a Superuser creation request"""
 
-    name: str
+    username: str
     email: EmailStr
     password: str
 
