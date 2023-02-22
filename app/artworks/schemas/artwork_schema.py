@@ -1,10 +1,11 @@
+"""Module for artwork schemas."""
 from enum import Enum
-
 from pydantic import UUID4, BaseModel
 from pydantic.schema import Any
 
 
 class Currency(str, Enum):
+    """currency codes as an enumeration of string values."""
     RSD = "RSD"
     EUR = "EUR"
 
@@ -23,6 +24,7 @@ class ArtworkSchema(BaseModel):
     currency: Currency
 
     class Config:
+        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True
         arbitrary_types_allowed = True
 
@@ -40,13 +42,16 @@ class ArtworkSchemaIn(BaseModel):
     currency: Currency
 
     class Config:
+        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True
 
 
 class ArtworkSchemaUpdate(BaseModel):
+    """Schema for updating artwork indo"""
     attribute: str
     value: Any
 
     class Config:
+        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True
         arbitrary_types_allowed = True

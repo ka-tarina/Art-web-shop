@@ -7,7 +7,7 @@ from app.users.schemas import UserSchema
 
 class OrderSchema(BaseModel):
     """A schema representing an Order stored in the database"""
-    id: uuid4
+    id: UUID4
     order_date: datetime
     order_status: str
     created_at: datetime
@@ -22,7 +22,7 @@ class OrderSchema(BaseModel):
 
 class OrderSchemaIn(BaseModel):
     """Model for representing incoming Order data."""
-    user_id: uuid4
+    user_id: UUID4
     shipping_address: str
     artwork_id: UUID4
     total_price: float
@@ -32,16 +32,8 @@ class OrderSchemaIn(BaseModel):
         orm_mode = True
 
 
-class DateRangeSchema(BaseModel):
-    from_date: datetime
-    to_date: datetime
-
-    class Config:
-        """Configuration options for the Pydantic BaseModel."""
-        orm_mode = True
-
-
 class ArtistSummaryReportSchema(BaseModel):
+    """Schema for artist summary report request."""
     from_date: datetime
     to_date: datetime
     artist_id: UUID4
@@ -52,6 +44,7 @@ class ArtistSummaryReportSchema(BaseModel):
 
 
 class ArtistSummaryReportResponseSchema(BaseModel):
+    """Schema for the response of an artist summary report."""
     artist_id: str
     number_of_art_sold: int
     total_price_of_art_sold: float

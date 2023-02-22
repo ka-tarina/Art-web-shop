@@ -1,3 +1,4 @@
+"""Module for category schemas."""
 from typing import List
 from pydantic import UUID4, BaseModel
 from app.artworks.schemas import ArtworkSchema
@@ -10,6 +11,7 @@ class CategorySchema(BaseModel):
     artworks: List[ArtworkSchema] = []
 
     class Config:
+        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True
 
 
@@ -18,6 +20,7 @@ class CategorySchemaIn(BaseModel):
     name: str
 
     class Config:
+        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True
 
 
@@ -27,6 +30,7 @@ class CategorySchemaUpdate(BaseModel):
     name: str
 
     class Config:
+        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True
 
 
@@ -34,3 +38,7 @@ class CategoryArtworksSchema(BaseModel):
     """A schema representing a Category with a list of Artworks."""
     name: str
     artworks: List[ArtworkSchema] = []
+
+    class Config:
+        """Configuration options for the Pydantic BaseModel."""
+        orm_mode = True
