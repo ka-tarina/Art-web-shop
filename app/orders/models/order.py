@@ -1,3 +1,4 @@
+"""Module for representing order in the system"""
 from datetime import datetime
 from uuid import uuid4
 from sqlalchemy import Column, Float, String, DateTime, ForeignKey
@@ -26,11 +27,14 @@ class Order(Base):
     artwork_id = Column(String(50), ForeignKey("artworks.id"), index=True)
     artwork = relationship("Artwork", back_populates="orders")
 
-    def __init__(self, user_id: str, order_date: datetime, total_price: float, shipping_address: str, artwork_id: str,
-                 order_status: OrderStatus = OrderStatus.PENDING):
+    def __init__(self,
+                 user_id: str,
+                 total_price: float,
+                 shipping_address: str,
+                 artwork_id: str):
         self.user_id = user_id
-        self.order_date = order_date
+        self.order_date = datetime.now()
         self.total_price = total_price
         self.shipping_address = shipping_address
         self.artwork_id = artwork_id
-        self.order_status = order_status
+        self.order_status = OrderStatus.PENDING

@@ -1,3 +1,4 @@
+"""Model for customer controller"""
 from fastapi import HTTPException
 from pydantic import EmailStr
 from sqlalchemy.exc import IntegrityError
@@ -17,6 +18,7 @@ class CustomerController:
 
     @staticmethod
     def verify_password(plain_password, hashed_password):
+        """Checks if password is verified."""
         return CustomerServices.verify_password(plain_password, hashed_password)
 
     @staticmethod

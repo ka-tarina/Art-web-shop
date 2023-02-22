@@ -1,3 +1,4 @@
+"""Module for user controller"""
 from fastapi import HTTPException
 from pydantic import EmailStr
 from sqlalchemy.exc import IntegrityError
@@ -7,8 +8,10 @@ from app.users.services import UserServices, UserAuthHandlerServices
 
 
 class UserController:
+    """A controller class for User models."""
     @staticmethod
     def create_user(username, email, password):
+        """Creates a new user in the system."""
         try:
             user = UserServices.create_user(username, email, password)
             return user
@@ -22,6 +25,7 @@ class UserController:
 
     @staticmethod
     def login_user(email, password):
+        """Logs user in the system."""
         try:
             user = UserServices.login_user(email, password)
             if user.role == UserRole.SUPERUSER:
@@ -38,6 +42,7 @@ class UserController:
 
     @staticmethod
     def register_user(username: str, email: EmailStr, password: str):
+        """Registers user in the system."""
         if UserServices.get_user_by_email(email):
             raise HTTPException(status_code=400, detail="Email already registered")
         elif UserServices.get_user_by_username(username):
@@ -47,6 +52,7 @@ class UserController:
 
     @staticmethod
     def get_user_by_id(user_id: str):
+        """Gets a user from the database by their ID."""
         user = UserServices.get_user_by_id(user_id)
         if user:
             return user
@@ -58,6 +64,7 @@ class UserController:
 
     @staticmethod
     def get_user_by_username(username: str):
+        """Gets a user from the database by their username."""
         user = UserServices.get_user_by_username(username)
         if user:
             return user
@@ -69,6 +76,7 @@ class UserController:
 
     @staticmethod
     def get_user_by_username_or_id(username_or_id: str):
+        """Gets a user from the database by their ID or username."""
         user = UserServices.get_user_by_username_or_id(username_or_id)
         if user:
             return user
@@ -80,6 +88,7 @@ class UserController:
 
     @staticmethod
     def get_user_by_email(email: EmailStr):
+        """Gets a user from the database by their email."""
         user = UserServices.get_user_by_email(email)
         if user:
             return user
@@ -91,6 +100,7 @@ class UserController:
 
     @staticmethod
     def get_user_by_username_or_id_or_email(username_id_email: str):
+        """Gets a user from the database by their ID, email or username."""
         user = UserServices.get_user_by_username_or_id_or_email(username_id_email)
         if user:
             return user
@@ -102,6 +112,7 @@ class UserController:
 
     @staticmethod
     def update_user_email(email: EmailStr, new_email: EmailStr):
+        """Updates email of user."""
         user = UserServices.update_user_email(email=email, new_email=new_email)
         if user:
             return user
@@ -113,6 +124,7 @@ class UserController:
 
     @staticmethod
     def update_user_password(email: str, password: str, new_password: str):
+        """Updates user password"""
         try:
             user = UserServices.update_user_password(email=email, password=password, new_password=new_password)
             return user
@@ -123,6 +135,7 @@ class UserController:
 
     @staticmethod
     def update_user_status(username_id_email: str, status: UserStatus):
+        """Updates user status"""
         try:
             user = UserServices.update_user_status(username_id_email=username_id_email, status=status)
             return user
@@ -134,6 +147,7 @@ class UserController:
 
     @staticmethod
     def update_user_role(username_id_email: str, role: UserRole):
+        """Updates user role"""
         try:
             user = UserServices.update_user_role(username_id_email=username_id_email, role=role)
             return user
@@ -145,11 +159,13 @@ class UserController:
 
     @staticmethod
     def get_all_users():
+        """Gets all users from the database."""
         users = UserServices.get_all_users()
         return users
 
     @staticmethod
     def delete_user_by_id(user_id: str):
+        """Deletes a user from the database by their ID."""
         try:
             deleted = UserServices.get_user_by_id(user_id)
             if not deleted:

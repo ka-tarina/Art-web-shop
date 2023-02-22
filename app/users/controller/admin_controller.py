@@ -1,3 +1,4 @@
+"""Model for admin controller"""
 from fastapi import HTTPException
 from pydantic import EmailStr
 from app.users.exceptions import UserNotFoundError
@@ -23,6 +24,7 @@ class AdminController:
 
     @staticmethod
     def create_admin_from_existing_user(user_id: str):
+        """Creates a new admin in the system from existing user."""
         try:
             admin = AdminServices.create_admin_from_existing_user(user_id=user_id)
             return admin
@@ -34,6 +36,7 @@ class AdminController:
 
     @staticmethod
     def get_admin_by_id(admin_id: str):
+        """Gets an admin from the database by their ID."""
         try:
             admin = AdminServices.get_admin_by_id(admin_id)
             return admin
@@ -45,11 +48,13 @@ class AdminController:
 
     @staticmethod
     def get_all_admins():
+        """Gets all admins from the database."""
         admins = AdminServices.get_all_admins()
         return admins
 
     @staticmethod
     def delete_admin_by_id(admin_id: str):
+        """Deletes an admin from the database by their ID."""
         try:
             deleted = AdminServices.get_admin_by_id(admin_id)
             if not deleted:

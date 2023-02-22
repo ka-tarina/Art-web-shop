@@ -1,7 +1,5 @@
-from typing import Optional
-
+"""Module for superuser schemas."""
 from pydantic import UUID4, BaseModel, EmailStr
-
 from app.users.enums import UserRole, UserStatus
 
 
@@ -16,6 +14,7 @@ class SuperUserSchema(BaseModel):
     role: UserRole = UserRole.SUPERUSER
 
     class Config:
+        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True
 
 
@@ -27,4 +26,5 @@ class SuperUserSchemaIn(BaseModel):
     password: str
 
     class Config:
+        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True
