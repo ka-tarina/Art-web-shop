@@ -1,3 +1,4 @@
+"""Model for superuser controller"""
 from fastapi import HTTPException
 from pydantic import EmailStr
 from sqlalchemy.exc import IntegrityError
@@ -8,6 +9,7 @@ from app.users.services import SuperUserServices, UserServices
 class SuperUserController:
     @staticmethod
     def create_superuser(username: str, email: EmailStr, password: str):
+        """Creates a new superuser in the system."""
         try:
             user_exist = UserServices.get_user_by_email(email=email)
             if user_exist:
@@ -23,6 +25,7 @@ class SuperUserController:
 
     @staticmethod
     def create_superuser_from_existing_user(user_id: str):
+        """Creates a new superuser in the system from existing user."""
         try:
             superuser = SuperUserServices.create_superuser_from_existing_user(
                 user_id=user_id
@@ -36,6 +39,7 @@ class SuperUserController:
 
     @staticmethod
     def get_superuser_by_id(superuser_id: str):
+        """Gets a superuser from the database by their ID."""
         superuser = SuperUserServices.get_superuser_by_id(superuser_id)
         if superuser:
             return superuser
@@ -47,11 +51,13 @@ class SuperUserController:
 
     @staticmethod
     def get_all_superusers():
+        """Gets all superusers from the database."""
         superusers = SuperUserServices.get_all_superusers()
         return superusers
 
     @staticmethod
     def delete_superuser_by_id(superuser_id: str):
+        """Deletes a superuser from the database by their ID."""
         try:
             deleted = SuperUserServices.get_superuser_by_id(superuser_id)
             if not deleted:

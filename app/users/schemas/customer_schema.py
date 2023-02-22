@@ -1,3 +1,4 @@
+"""Module for customer schemas."""
 from pydantic import UUID4, BaseModel, EmailStr
 from pydantic.schema import Optional
 from app.users.enums import UserRole, UserStatus
@@ -13,6 +14,7 @@ class CustomerSchema(BaseModel):
     role: UserRole = UserRole.CUSTOMER
 
     class Config:
+        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True
 
 
@@ -23,6 +25,7 @@ class CustomerSchemaIn(BaseModel):
     password: str
 
     class Config:
+        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True
 
 
@@ -34,13 +37,16 @@ class CustomerSchemaOut(BaseModel):
     role: UserRole = UserRole.CUSTOMER
 
     class Config:
+        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True
 
 
 class UpdateCustomerSchema(BaseModel):
+    """Schema for updating Customer info."""
     customer_id: str
     status: Optional[UserStatus]
     email: Optional[EmailStr]
 
     class Config:
+        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True

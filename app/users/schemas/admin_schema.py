@@ -1,3 +1,4 @@
+"""Module for admin schemas."""
 from pydantic import UUID4, BaseModel, EmailStr
 from app.users.enums import UserRole, UserStatus
 
@@ -13,6 +14,7 @@ class AdminSchema(BaseModel):
     role: UserRole = UserRole.ADMIN
 
     class Config:
+        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True
 
 
@@ -24,4 +26,5 @@ class AdminSchemaIn(BaseModel):
     password: str
 
     class Config:
+        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True

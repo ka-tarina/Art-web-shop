@@ -1,4 +1,4 @@
-"""Module for controller import."""
+"""Module for user models import."""
 from .user import User
 from .superuser import SuperUser
 from .artist import Artist

@@ -1,4 +1,7 @@
+"""Module for order controller."""
 from datetime import datetime
+from uuid import uuid4
+
 from fastapi import HTTPException, Response
 from app.orders.exceptions import OrderExceptionCode, OrderNotFoundException, InvalidOrderStatusError
 from app.orders.models import OrderStatus
@@ -8,7 +11,7 @@ from app.orders.services import OrderService
 class OrderController:
     """A controller for handling requests related to orders."""
     @staticmethod
-    def create_order(user_id: str, shipping_address: str, artwork_id: str, shipping: float):
+    def create_order(user_id: str, shipping_address: str, artwork_id: uuid4, shipping: float):
         """Creates a new order in the database."""
         try:
             order = OrderService.create_order(user_id, shipping_address, artwork_id, shipping)
@@ -49,7 +52,7 @@ class OrderController:
         return orders
 
     @staticmethod
-    def get_artist_summary_report(from_date: datetime, to_date: datetime, artist_id: str):
+    def get_artist_summary_report(from_date: datetime, to_date: datetime, artist_id: uuid4):
         """Returns a summary report of an artist's sales for a given period."""
         try:
             report = OrderService.get_artist_summary_report(from_date, to_date, artist_id)
