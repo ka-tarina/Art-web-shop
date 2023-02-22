@@ -1,6 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.exc import IntegrityError
-
 from app.users.controller import (
     AdminController,
     ArtistController,
@@ -9,89 +8,104 @@ from app.users.controller import (
     SuperUserController,
 )
 from app.users.controller.user_auth_controller import JWTBearer
-
 # from app.users.controller import SuperUserController
 # from app.users.controller.user_auth_controller import JWTBearer
 from app.users.controller.user_controller import UserController
+from app.users.models import User
 from app.users.schemas import *
+from app.users.schemas.user_schema import LoginSchema
 from app.users.services import ArtistServices, SuperUserServices
 
-#
-# user_router = APIRouter(tags=["users"], prefix="/api/users")
-# #
-#
-# @user_router.post("/add-new-user", response_model=UserSchema)
-# def create_user(user: UserSchemaIn):
-#     return UserController.create_user(user.name, user.email, user.password)
-#
-#
-# # @user_router.post("/add-new-super-user", response_model=SuperUser,) #dependencies=[Depends(JWTBearer("super_user"))])
-# # def create_superuser(superuser: SuperUserCreate):
-# #     return UserController.create_superuser(superuser=superuser)
 
-#
-#
-# @user_router.post("/login")
-# def login_user(user: UserSchemaIn):
-#     return UserController.login_user(user.email, user.password)
-#
+user_router = APIRouter(tags=["users"], prefix="/api/users")
 
-# @user_router.get("/id", response_model=UserSchema)
-# def get_user_by_id(user_id: str):
-#     return UserController.get_user_by_id(user_id)
-#
-#
-# @user_router.get("/get-all-users", response_model=list[UserSchema], dependencies=[Depends(JWTBearer(UserRole.SUPERUSER))])
-# def get_all_users():
-#     return UserController.get_all_users()
-#
-#
-# @user_router.delete("/", dependencies=[Depends(JWTBearer(UserRole.SUPERUSER))])
-# def delete_user_by_id(user_id: str):
-#     return UserController.delete_user_by_id(user_id)
-#
-#
-# # @user_router.put("/update/is_active", response_model=UserSchema)
-# # def update_user(user_id: str, is_active: bool):
-# #     return UserController.update_user_is_active(user_id, is_active)
+
+@user_router.post("/login")
+def login_user(user: LoginSchema):
+    return UserController.login_user(user.email, user.password)
+
+
+@user_router.get("/get-user-by-id/{user_id}",
+                 response_model=UserSchema,
+                 dependencies=[Depends(JWTBearer(roles=[UserRole.ADMIN, UserRole.SUPERUSER]))])
+def get_user_by_id(user_id: str):
+    return UserController.get_user_by_id(user_id)
+
+
+@user_router.get("/get-all-users",
+                 response_model=list[UserSchema],
+                 dependencies=[Depends(JWTBearer(roles=[UserRole.ADMIN, UserRole.SUPERUSER]))])
+def get_all_users():
+    return UserController.get_all_users()
+
+
+@user_router.delete("/", dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER]))])
+def delete_user_by_id(user_id: str):
+    return UserController.delete_user_by_id(user_id)
+
 
 customer_router = APIRouter(tags=["customers"], prefix="/api/customers")
 
 
-@customer_router.post("/create-customer")
-async def create_customer(name: str, email: EmailStr, password: str):
-    customer = CustomerController.create_customer(name, email, password)
+@customer_router.post("/create-customer", response_model=CustomerSchema)
+async def create_customer(customer: CustomerSchemaIn):
+    customer = CustomerController.create_customer(customer.username, customer.email, customer.password)
     return customer
 
 
-@customer_router.get("/get-all-customers")
+@customer_router.get("/get-all-customers",
+                     response_model=list[CustomerSchema],
+                     dependencies=[Depends(JWTBearer(roles=[UserRole.ADMIN, UserRole.SUPERUSER]))])
 async def get_all_customers():
     customers = CustomerController.get_all_customers()
     return customers
 
 
-@customer_router.get("/get-customer-by-id/{customer_id}")
+@customer_router.get("/get-customer-by-id/{customer_id}", response_model=CustomerSchema)
 def get_customer_by_id(customer_id: str):
     customer = CustomerController.get_customer_by_id(customer_id=customer_id)
     return customer
 
 
-@customer_router.delete("/delete-customer-by-id/{customer_id}")
+@customer_router.get("/get-customer-by-username/{customer_username}", response_model=CustomerSchema)
+def get_customer_by_username(customer_username: str):
+    customer = CustomerController.get_customer_by_username(customer_username=customer_username)
+    return customer
+
+
+@customer_router.get("/get-customer-by-username/{customer_username}", response_model=CustomerSchema)
+def get_customer_by_identifier(identifier: str):
+    customer = CustomerController.get_customer_by_identifier(identifier=identifier)
+    return customer
+
+
+@customer_router.delete("/delete-customer-by-id/{customer_id}",
+                        dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER]))])
 async def delete_customer_by_id(customer_id: str):
     response = CustomerController.delete_customer_by_id(customer_id)
     return response
 
 
-@customer_router.put("/update-customer-status/{customer_id}")
-async def update_customer_status(user_id: str, status: UserStatus):
-    response = CustomerController.update_customer_status(user_id, status)
+@customer_router.put("/update-customer-status/{customer_id}",
+                     response_model=CustomerSchema,
+                     dependencies=[Depends(JWTBearer(roles=[UserRole.ADMIN, UserRole.SUPERUSER]))])
+async def update_customer_status(customer: UpdateCustomerSchema):
+    response = CustomerController.update_customer_status(customer.customer_id, customer.status)
     return response
 
 
-@customer_router.get("/read-customer-by-email/{email}")
+@customer_router.get("/read-customer-by-email/{email}", response_model=CustomerSchemaOut)
 async def read_customer_by_email(email: str):
     customer = CustomerController.get_customer_by_email(email)
     return customer
+
+
+@customer_router.put("/update-customer-email/{email}",
+                     response_model=CustomerSchema,
+                     dependencies=[Depends(JWTBearer(roles=[UserRole.ADMIN, UserRole.SUPERUSER]))])
+async def update_customer_email(customer: UpdateCustomerSchema):
+    response = CustomerController.update_customer_email(customer.customer_id, customer.email)
+    return response
 
 
 superuser_router = APIRouter(tags=["superusers"], prefix="/api/superusers")
