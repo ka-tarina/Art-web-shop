@@ -1,3 +1,4 @@
+"""Module for user repository."""
 import hashlib
 from pydantic import EmailStr
 from sqlalchemy.exc import IntegrityError
@@ -49,7 +50,8 @@ class UserRepository:
     def get_user_by_username_or_id(self, username_or_id: str):
         """Gets a user from the database by their username or their ID."""
         try:
-            user = self.db.query(User).filter((User.username == username_or_id) | (User.id == username_or_id)).first()
+            user = self.db.query(User).filter((User.username == username_or_id) |
+                                              (User.id == username_or_id)).first()
             return user
         except Exception as e:
             raise e

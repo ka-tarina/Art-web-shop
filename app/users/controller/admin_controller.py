@@ -1,13 +1,13 @@
 from fastapi import HTTPException
 from pydantic import EmailStr
-from sqlalchemy.exc import IntegrityError
-
+from app.users.exceptions import UserNotFoundError
 from app.users.services import AdminServices, UserServices
 
 
 class AdminController:
     @staticmethod
     def create_admin(username: str, email: EmailStr, password: str):
+        """Creates a new admin in the system."""
         try:
             user_exist = UserServices.get_user_by_email(email=email)
             if user_exist:
@@ -26,7 +26,7 @@ class AdminController:
         try:
             admin = AdminServices.create_admin_from_existing_user(user_id=user_id)
             return admin
-        except Exception:
+        except UserNotFoundError:
             raise HTTPException(
                 status_code=400,
                 detail=f"Admin with provided ID {user_id} does not exist",
@@ -34,10 +34,10 @@ class AdminController:
 
     @staticmethod
     def get_admin_by_id(admin_id: str):
-        admin = AdminServices.get_admin_by_id(admin_id)
-        if admin:
+        try:
+            admin = AdminServices.get_admin_by_id(admin_id)
             return admin
-        else:
+        except UserNotFoundError:
             raise HTTPException(
                 status_code=400,
                 detail=f"Admin with provided id {admin_id} does not exist",
@@ -53,7 +53,7 @@ class AdminController:
         try:
             deleted = AdminServices.get_admin_by_id(admin_id)
             if not deleted:
-                raise HTTPException(status_code=404, detail="User not found")
+                raise UserNotFoundError(code=404, message="User not found")
             AdminServices.delete_admin_by_id(admin_id)
             return {"detail": f"Admin deleted successfully"}
         except Exception as e:

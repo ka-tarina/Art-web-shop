@@ -1,7 +1,5 @@
+"""Module for artist service."""
 import hashlib
-
-from pydantic import EmailStr
-
 from app.db.database import SessionLocal
 from app.users.enums import UserStatus
 from app.users.repository import CustomerRepository
@@ -31,6 +29,7 @@ class CustomerServices:
 
     @staticmethod
     def verify_password(plain_password, hashed_password):
+        """Verifies customer password."""
         return hashed_password == hashlib.sha256(bytes(plain_password, "utf-8")).hexdigest()
 
     @staticmethod

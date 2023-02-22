@@ -1,27 +1,33 @@
-from fastapi import APIRouter, Depends
+from uuid import uuid4
 
+from fastapi import APIRouter
 from app.artworks.controller import ArtworkController, CategoryController
-from app.artworks.schemas import ArtworkSchema, ArtworkSchemaIn, ArtworkSchemaUpdate
+from app.artworks.schemas import ArtworkSchema, ArtworkSchemaIn, ArtworkSchemaUpdate, CategoryArtworksSchema
+from app.artworks.schemas import CategorySchema, CategorySchemaIn, CategorySchemaUpdate
 
 category_router = APIRouter(tags=["categories"], prefix="/api/category")
 
 
-@category_router.post("/create-new-category")
-async def create_category(name: str):
-    return CategoryController.create_new_category(name)
+@category_router.post("/create-new-category",
+                      response_model=CategorySchema)
+async def create_category(category: CategorySchemaIn):
+    return CategoryController.create_new_category(category.name)
 
 
-@category_router.get("/get-all-categories")
+@category_router.get("/get-all-categories",
+                     response_model=list[CategorySchema])
 async def get_all_categories():
     return CategoryController.get_all_categories()
 
 
-@category_router.get("/get-category-by-id/{category_id}")
+@category_router.get("/get-category-by-id/{category_id}",
+                     response_model=CategorySchema)
 async def get_category_by_id(category_id: str):
     return CategoryController.get_category_by_id(category_id)
 
 
-@category_router.get("/get-category_by_name")
+@category_router.get("/get-category_by_name",
+                     response_model=CategorySchema)
 async def get_category_by_name(name: str):
     return CategoryController.get_category_by_name(name)
 
@@ -31,23 +37,22 @@ async def delete_category_by_id(category_id: str):
     return CategoryController.delete_category_by_id(category_id)
 
 
-@category_router.put("/update-category-name/{category_id}")
-async def update_category_name(category_id: str, new_name: str):
-    return CategoryController.update_category_name(category_id, new_name)
+@category_router.put("/update-category-name/{category_id}",
+                     response_model=CategorySchema)
+async def update_category_name(category: CategorySchemaUpdate):
+    return CategoryController.update_category_name(category.id, category.name)
 
 
-@category_router.get("/get-artworks-by-category-name/{category_name}/artworks")
-async def get_artworks_by_category_name(
-    category_name: str, skip: int = 0, limit: int = 100
-):
-    return CategoryController.get_artworks_by_category_name(category_name, skip, limit)
+@category_router.get("/get-artworks-by-category-name/{category_name}/artworks",
+                     response_model=CategoryArtworksSchema)
+async def get_artworks_by_category_name(category_name: str):
+    return CategoryController.get_artworks_by_category_name(category_name)
 
 
-@category_router.get("/get-artworks-by-category-id/{category_id}/artworks")
-async def get_artworks_by_category_id(
-    category_id: str, skip: int = 0, limit: int = 100
-):
-    return CategoryController.get_artworks_by_category_id(category_id, skip, limit)
+@category_router.get("/get-artworks-by-category-id/{category_id}/artworks",
+                     response_model=CategoryArtworksSchema)
+async def get_artworks_by_category_id(category_id: str):
+    return CategoryController.get_artworks_by_category_id(category_id)
 
 
 artwork_router = APIRouter(tags=["artworks"], prefix="/api/artworks")

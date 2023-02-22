@@ -20,6 +20,7 @@ class ArtworkController:
         artist_id: uuid4,
         currency: Currency,
     ):
+
         try:
             artwork = ArtworkService.create_artwork(
                 name=name,

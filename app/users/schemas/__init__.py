@@ -1,3 +1,4 @@
+"""Module for users schemas import."""
 from .user_schema import *
 from .artist_schema import *
 from .customer_schema import *

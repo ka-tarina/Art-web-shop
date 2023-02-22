@@ -1,5 +1,5 @@
-from uuid import uuid4
-from sqlalchemy import Column, ForeignKey, ForeignKeyConstraint, String, Table
+"""Module for representing Artist in the system"""
+from sqlalchemy import Column, ForeignKey, String, Table
 from sqlalchemy.orm import relationship
 from app.users.models import User
 from app.users.enums import UserRole, UserStatus
