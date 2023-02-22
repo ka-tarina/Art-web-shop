@@ -1,4 +1,6 @@
 import time
+from typing import List
+
 from fastapi import HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt import PyJWTError
@@ -7,9 +9,9 @@ from app.users.services import UserAuthHandlerServices
 
 
 class JWTBearer(HTTPBearer):
-    def __init__(self, role: UserRole = None, auto_error: bool = True):
+    def __init__(self, roles: List[UserRole] = None, auto_error: bool = True):
         super(JWTBearer, self).__init__(auto_error=auto_error)
-        self.role = role
+        self.roles = roles
 
     async def __call__(self, request: Request):
         credentials: HTTPAuthorizationCredentials = await super(JWTBearer, self).__call__(request)
@@ -19,7 +21,7 @@ class JWTBearer(HTTPBearer):
             try:
                 payload = UserAuthHandlerServices.decodeJWT(credentials.credentials)
 
-                if self.role is not None and UserRole(payload.get("role")) != self.role:
+                if self.roles is not None and UserRole(payload.get("role")) != self.roles:
                     raise HTTPException(
                         status_code=403, detail="Not enough permissions."
                     )
@@ -38,7 +40,8 @@ class JWTBearer(HTTPBearer):
         is_token_valid: bool = False
         try:
             payload = UserAuthHandlerServices.decodeJWT(jwtoken)
-        except:
+        except Exception as e:
+            print(e)
             payload = None
         if payload:
             is_token_valid = True
