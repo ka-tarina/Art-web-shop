@@ -1,5 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
-from sqlalchemy.exc import IntegrityError
+from fastapi import APIRouter, Depends
 from app.users.controller import (
     AdminController,
     ArtistController,
@@ -8,13 +7,8 @@ from app.users.controller import (
     SuperUserController,
 )
 from app.users.controller.user_auth_controller import JWTBearer
-# from app.users.controller import SuperUserController
-# from app.users.controller.user_auth_controller import JWTBearer
 from app.users.controller.user_controller import UserController
-from app.users.models import User
 from app.users.schemas import *
-from app.users.schemas.user_schema import LoginSchema
-from app.users.services import ArtistServices, SuperUserServices
 
 
 user_router = APIRouter(tags=["users"], prefix="/api/users")
@@ -108,36 +102,56 @@ async def update_customer_email(customer: UpdateCustomerSchema):
     return response
 
 
+@customer_router.post("/follow-artist/{customer_id}/{artist_id}",
+                      response_model=CustomerFollowedArtistSchema,
+                      dependencies=[Depends(JWTBearer(roles=[UserRole.CUSTOMER]))])
+async def follow_artist(follow_id: FollowSchema):
+    return FollowController.follow_artist(follow_id.customer_id, follow_id.artist_id)
+
+
+@customer_router.post("/unfollow-artist/{customer_id}/{artist_id}",
+                      response_model=CustomerFollowedArtistSchema,
+                      dependencies=[Depends(JWTBearer(roles=[UserRole.CUSTOMER]))])
+async def unfollow_artist(unfollow_id: FollowSchema):
+    return FollowController.unfollow_artist(unfollow_id.customer_id, unfollow_id.artist_id)
+
+
+@customer_router.get("/get-following-artists/{customer_id}",
+                     response_model=FollowingArtistsSchema)
+async def get_following_artists(customer_id: str):
+    return FollowController.get_following_artists(customer_id)
+
+
 superuser_router = APIRouter(tags=["superusers"], prefix="/api/superusers")
 
 
-@superuser_router.post("/create-superuser")
-async def create_superuser(username: str, email: EmailStr, password: str):
+@superuser_router.post("/create-superuser", response_model=SuperUserSchema)
+async def create_superuser(superuser: SuperUserSchemaIn):
     superuser = SuperUserController.create_superuser(
-        username=username, email=email, password=password
+        superuser.username, superuser.email, superuser.password
     )
     return superuser
 
 
-# @superuser_router.post("/create-from-existing-user")
-# def create_superuser_from_existing_user(user_id: str):
-#     superuser = SuperUserController.create_superuser_from_existing_user(user_id=user_id)
-#     return superuser
-
-
-@superuser_router.get("/get-superuser-by-id/{superuser_id}")
+@superuser_router.get("/get-superuser-by-id/{superuser_id}",
+                      response_model=SuperUserSchema,
+                      dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER]))])
 async def get_superuser_by_id(superuser_id: str):
     superuser = SuperUserController.get_superuser_by_id(superuser_id)
     return superuser
 
 
-@superuser_router.get("/get-all-superusers")
+@superuser_router.get("/get-all-superusers",
+                      response_model=list[SuperUserSchema],
+                      dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER]))])
 async def get_all_superusers():
     superusers = SuperUserController.get_all_superusers()
     return superusers
 
 
-@superuser_router.delete("/delete-superuser-by-id/{superuser_id}")
+@superuser_router.delete("/delete-superuser-by-id/{superuser_id}",
+                         response_model=SuperUserSchema,
+                         dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER]))])
 async def delete_superuser_by_id(superuser_id: str):
     SuperUserController.delete_superuser_by_id(superuser_id=superuser_id)
 
@@ -145,96 +159,95 @@ async def delete_superuser_by_id(superuser_id: str):
 artist_router = APIRouter(tags=["artists"], prefix="/api/artists")
 
 
-@artist_router.post("/create-artist")
+@artist_router.post("/create-artist",
+                    response_model=ArtistSchemaIn,
+                    dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER, UserRole.ADMIN]))])
 async def create_artist(username: str, email: EmailStr, password: str, bio, website):
     artist = ArtistController.create_artist(username, email, password, bio, website)
     return artist
 
 
-@artist_router.get("/get-artist-by-id/{artist_id}")
+@artist_router.get("/get-artist-by-id/{artist_id}",
+                   response_model=ArtistSchema)
 async def get_artist_by_id(artist_id: str):
     artist = ArtistController.get_artist_by_id(artist_id)
     return artist
 
 
-@artist_router.get("/get-artist-by-username/{username}")
+@artist_router.get("/get-artist-by-username/{username}",
+                   response_model=ArtistSchemaOut)
 async def get_artist_by_username(username: str):
     artist = ArtistController.get_artist_by_username(username)
     return artist
 
 
-@artist_router.get("/get-all-artists")
+@artist_router.get("/get-all-artists",
+                   response_model=list[ArtistSchema])
 async def get_all_artists():
     artists = ArtistController.get_all_artists()
     return artists
 
 
-@artist_router.put("/update-artist-bio/{artist_id}")
-async def update_artist_bio(artist_id: str, bio: str):
-    ArtistController.update_artist_bio(artist_id, bio)
-    return {"detail": "Artist bio updated successfully"}
+@artist_router.put("/update-artist-bio/{artist_id}",
+                   response_model=ArtistSchema,
+                   dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER, UserRole.ADMIN]))])
+async def update_artist_bio(artist: ArtistSchemaUpdate):
+    artist = ArtistController.update_artist_bio(artist.id, artist.bio)
+    return artist
 
 
-@artist_router.put("/update-artist-website/{artist_id}")
-async def update_artist_website(artist_id: str, website: str):
-    ArtistController.update_artist_website(artist_id, website)
-    return {"detail": "Artist website updated successfully"}
+@artist_router.put("/update-artist-website/{artist_id}",
+                   response_model=ArtistSchema,
+                   dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER, UserRole.ADMIN]))])
+async def update_artist_website(artist: ArtistSchemaUpdate):
+    artist = ArtistController.update_artist_website(artist.id, artist.bio)
+    return artist
 
 
-@artist_router.delete("/delete-artist-by-id/{artist_id}")
+@artist_router.delete("/delete-artist-by-id/{artist_id}",
+                      dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER]))])
 async def delete_artist_by_id(artist_id: str):
-    ArtistController.delete_artist_by_id(artist_id)
-    return {"detail": "Artist deleted successfully"}
+    return ArtistController.delete_artist_by_id(artist_id)
+
+
+@artist_router.get("/get-followers/{artist_id}",
+                   response_model=FollowersSchema)
+async def get_followers(artist_id: str):
+    return FollowController.get_followers(artist_id)
+
+
+@artist_router.get("/top-artists-by-followers/{limit}",
+                   response_model=TopFollowersSchema)
+async def get_top_artists_by_followers(limit: int):
+    data = FollowController.get_artists_by_followers(limit)
+    return data
 
 
 admin_router = APIRouter(tags=["admins"], prefix="/api/admins")
 
 
-@admin_router.post("/create-admin", response_model=AdminSchema)
+@admin_router.post("/create-admin",
+                   response_model=AdminSchema,
+                   dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER, UserRole.ADMIN]))])
 async def create_admin(admin: AdminSchemaIn):
     return AdminController.create_admin(admin.username, admin.email, admin.password)
 
 
-# @admin_router.post(
-#     "/create-admin-from-existing-user/{user_id}", response_model=AdminSchema
-# )
-# async def create_admin_from_existing_user(user_id: str):
-#     return AdminController.create_admin_from_existing_user(user_id)
-
-
-@admin_router.get("/get-admin-by-id/{admin_id}", response_model=AdminSchema)
+@admin_router.get("/get-admin-by-id/{admin_id}",
+                  response_model=AdminSchema,
+                  dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER, UserRole.ADMIN]))])
 async def get_admin_by_id(admin_id: str):
     return AdminController.get_admin_by_id(admin_id)
 
 
-@admin_router.get("/get-all-admins", response_model=list[AdminSchema])
+@admin_router.get("/get-all-admins",
+                  response_model=list[AdminSchema],
+                  dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER, UserRole.ADMIN]))])
 async def get_all_admins():
     return AdminController.get_all_admins()
 
 
-@admin_router.delete("/delete-admin-by-id/{admin_id}")
+@admin_router.delete("/delete-admin-by-id/{admin_id}",
+                     dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER]))])
 async def delete_admin_by_id(admin_id: str):
     return AdminController.delete_admin_by_id(admin_id)
-
-
-follow_router = APIRouter(tags=["follows"], prefix="/api/follows")
-
-
-@follow_router.post("/follow-artist/{customer_id}/{artist_id}")
-async def follow_artist(customer_id: str, artist_id: str):
-    return FollowController.follow_artist(customer_id, artist_id)
-
-
-@follow_router.post("/unfollow-artist/{customer_id}/{artist_id}")
-async def unfollow_artist(customer_id: str, artist_id: str):
-    return FollowController.unfollow_artist(customer_id, artist_id)
-
-
-@follow_router.get("/get-following-artists/{customer_id}")
-async def get_following_artists(customer_id: str):
-    return FollowController.get_following_artists(customer_id)
-
-
-@follow_router.get("/get-followers/{artist_id}")
-async def get_followers(artist_id: str):
-    return FollowController.get_followers(artist_id)

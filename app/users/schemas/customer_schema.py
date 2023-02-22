@@ -1,6 +1,5 @@
 from pydantic import UUID4, BaseModel, EmailStr
 from pydantic.schema import Optional
-
 from app.users.enums import UserRole, UserStatus
 
 

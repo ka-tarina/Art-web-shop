@@ -37,3 +37,9 @@ class FollowServices:
     def get_followers(repository, artist_id):
         """Retrieves all customers who are following an artist."""
         return repository.get_followers(artist_id)
+
+    @staticmethod
+    @repository_method_wrapper
+    def get_artists_by_followers(repository, limit):
+        """Retrieves the top N artists with the most followers."""
+        return repository.get_artists_by_followers(limit)

@@ -22,10 +22,10 @@ class AdminServices:
             username=username, email=email, password=password
         )
 
-    # @staticmethod
-    # @repository_method_wrapper
-    # def create_admin_from_existing_user(repository, user_id):
-    #     return repository.create_admin_from_existing_user(user_id=user_id)
+    @staticmethod
+    @repository_method_wrapper
+    def create_admin_from_existing_user(repository, user_id):
+        return repository.create_admin_from_existing_user(user_id=user_id)
 
     @staticmethod
     @repository_method_wrapper

@@ -1,3 +1,4 @@
+from sqlalchemy import desc
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from app.users.models import Artist, Customer
@@ -55,6 +56,16 @@ class FollowRepository:
         try:
             artist = self.db.query(Artist).get(artist_id)
             return artist.followers
+        except IntegrityError as e:
+            raise e
+        except Exception as e:
+            raise e
+
+    def get_artists_by_followers(self, limit: int = 10):
+        """Retrieves the top N artists with the most followers."""
+        try:
+            artists = self.db.query(Artist).order_by(desc(Artist.num_followers)).limit(limit).all()
+            return artists
         except IntegrityError as e:
             raise e
         except Exception as e:
