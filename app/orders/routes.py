@@ -2,7 +2,7 @@
 API for order management. It includes routes for
 creating, deleting and updating orders.
 """
-from typing import Optional
+from typing import Optional, List
 from fastapi import APIRouter, HTTPException, Response
 from app.orders.controller import OrderController
 from app.orders.models import OrderStatus
@@ -54,7 +54,7 @@ def get_orders_in_date_range(from_date: str, to_date: str):
     return orders
 
 
-@order_router.get("/artist-summary-report", response_model=list(ArtistSummaryReportResponseSchema))
+@order_router.get("/artist-summary-report", response_model=List[ArtistSummaryReportResponseSchema])
 def get_artist_summary_report(artist_summary_report: ArtistSummaryReportSchema):
     """
     Retrieves a summary report of the number of art sold and

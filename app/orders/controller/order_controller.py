@@ -11,7 +11,7 @@ from app.orders.services import OrderService
 class OrderController:
     """A controller for handling requests related to orders."""
     @staticmethod
-    def create_order(user_id: str, shipping_address: str, artwork_id: uuid4, shipping: float):
+    def create_order(user_id: uuid4, shipping_address: str, artwork_id: uuid4, shipping: float):
         """Creates a new order in the database."""
         try:
             order = OrderService.create_order(user_id, shipping_address, artwork_id, shipping)
