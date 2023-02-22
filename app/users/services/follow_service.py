@@ -1,8 +1,10 @@
+"""Module for follow service."""
 from app.db.database import SessionLocal
 from app.users.repository import FollowRepository
 
 
 def repository_method_wrapper(func):
+    """Automatically handles database sessions and exceptions."""
     def wrapper(*args, **kwargs):
         with SessionLocal() as db:
             try:

@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from fastapi import HTTPException, Response
 from app.artworks.exceptions import CategoryExceptionCode, CategoryNotFoundException
 from app.artworks.services import CategoryService
@@ -21,7 +23,7 @@ class CategoryController:
         return categories
 
     @staticmethod
-    def get_category_by_id(category_id: str):
+    def get_category_by_id(category_id: uuid4()):
         try:
             category = CategoryService.get_category_by_id(category_id)
             return category
@@ -57,7 +59,7 @@ class CategoryController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def update_category_name(category_id: str, new_name: str):
+    def update_category_name(category_id: uuid4, new_name: str):
         try:
             category = CategoryService.update_category_name(category_id=category_id, new_name=new_name)
             return category

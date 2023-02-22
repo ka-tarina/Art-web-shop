@@ -1,6 +1,6 @@
+"""Module for artist repository."""
 from sqlalchemy.orm import Session
 from app.users.models import Artist
-from app.users.enums import UserStatus
 
 
 class ArtistRepository:
@@ -10,10 +10,19 @@ class ArtistRepository:
         """Initializes a new instance of the ArtistRepository class."""
         self.db = db
 
-    def create_artist(self, username: str, email: str, password: str, bio: str = "", website: str = ""):
+    def create_artist(self,
+                      username: str,
+                      email: str,
+                      password: str,
+                      bio: str = "",
+                      website: str = ""):
         """Creates a new artist in the system."""
         try:
-            artist = Artist(username=username, email=email, password=password, bio=bio, website=website)
+            artist = Artist(username=username,
+                            email=email,
+                            password=password,
+                            bio=bio,
+                            website=website)
             self.db.add(artist)
             self.db.commit()
             self.db.refresh(artist)

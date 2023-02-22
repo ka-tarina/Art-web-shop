@@ -1,7 +1,8 @@
+"""Module for representing Customer in the system"""
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String, ForeignKey, Table
 from app.db.database import Base
-from app.users.models import User, Artist
+from app.users.models import User
 from app.users.enums import UserRole, UserStatus
 
 follows = Table(

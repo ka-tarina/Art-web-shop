@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from app.artworks.repository import CategoryRepository
 from app.db import SessionLocal
 
@@ -21,7 +23,7 @@ class CategoryService:
 
     @staticmethod
     @repository_method_wrapper
-    def get_category_by_id(repository, category_id: str):
+    def get_category_by_id(repository, category_id: uuid4()):
         return repository.get_category_by_id(category_id=category_id)
 
     @staticmethod
@@ -31,7 +33,7 @@ class CategoryService:
 
     @staticmethod
     @repository_method_wrapper
-    def update_category_name(repository, category_id: str, new_name: str):
+    def update_category_name(repository, category_id: uuid4(), new_name: str):
         return repository.update_category_name(category_id=category_id, new_name=new_name)
 
     @staticmethod
@@ -57,7 +59,7 @@ class CategoryService:
     def get_artworks_by_category_name(category_name: str, skip: int = 0, limit: int = 100):
         with SessionLocal() as db:
             try:
-                category = CategoryRepository(db).get_category_by_name(category_name=category_name)
+                category = CategoryRepository(db).get_category_by_name(name=category_name)
                 return category.artworks[skip: skip + limit]
             except Exception as e:
                 raise e

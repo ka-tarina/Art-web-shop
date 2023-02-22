@@ -1,3 +1,4 @@
+"""Module for follow repository."""
 from sqlalchemy import desc
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -5,6 +6,7 @@ from app.users.models import Artist, Customer
 
 
 class FollowRepository:
+    """A repository class for Follow models."""
     def __init__(self, db: Session):
         """Initializes a new instance of the FollowRepository class."""
         self.db = db

@@ -17,3 +17,10 @@ class UserNotAdmin(Exception):
     def __init__(self, message, code):
         self.message = message
         self.code = code
+
+
+class UserNotFoundError(Exception):
+    """Exception raised when a user is not found in the system."""
+    def __init__(self, message, code):
+        self.message = message
+        self.code = code
