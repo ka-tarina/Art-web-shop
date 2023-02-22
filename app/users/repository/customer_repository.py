@@ -1,10 +1,9 @@
+"""Module for customer repository."""
 from typing import Optional
-
-from pydantic import UUID4, EmailStr
+from pydantic import EmailStr
 from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, joinedload
-
 from app.users.enums import UserRole, UserStatus
 from app.users.models import Customer, User
 from app.users.repository import UserRepository
@@ -21,7 +20,9 @@ class CustomerRepository:
     def create_customer(self, username, email, password):
         """Creates a new customer in the system."""
         try:
-            user = self.user_repository.create_user(username=username, email=email, password=password)
+            user = self.user_repository.create_user(username=username,
+                                                    email=email,
+                                                    password=password)
             customer = Customer(username=user.username,
                                 email=user.email,
                                 password=user.password)
@@ -51,7 +52,9 @@ class CustomerRepository:
         """Gets a customer from the database by their username, ID, or email."""
         try:
             customer = self.db.query(Customer).join(User).filter(
-                or_(Customer.username == identifier, Customer.user_id == identifier, User.email == identifier)).first()
+                or_(Customer.username == identifier,
+                    Customer.user_id == identifier,
+                    User.email == identifier)).first()
             return customer
         except Exception as e:
             raise e

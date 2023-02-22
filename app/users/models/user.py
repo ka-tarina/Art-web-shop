@@ -1,6 +1,6 @@
-from enum import Enum
+"""Module for representing User in the system"""
 from uuid import uuid4
-from sqlalchemy import Boolean, Column, String, ForeignKey
+from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import sqltypes
 from app.db.database import Base

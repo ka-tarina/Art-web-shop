@@ -1,3 +1,4 @@
+"""Module for User Authentification Handler service."""
 import time
 from typing import Dict
 import jwt
@@ -9,8 +10,10 @@ JWT_ALGORITHM = settings.ALGORITHM
 
 
 class UserAuthHandlerServices:
+    """A service class for User Authentification Handler."""
     @staticmethod
     def signJWT(user_id: str, role: UserRole) -> Dict[str, str]:
+        """Makes JWT payload and returns a token"""
         payload = {
             "user_id": user_id,
             "role": role,
@@ -23,6 +26,7 @@ class UserAuthHandlerServices:
 
     @staticmethod
     def decodeJWT(token: str) -> Dict or None:
+        """Decodes JWT token"""
         try:
             decoded_token = jwt.decode(token, USER_SECRET, algorithms=[JWT_ALGORITHM])
             user_id: str = decoded_token.get("user_id")

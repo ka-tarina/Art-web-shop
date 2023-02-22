@@ -1,24 +1,36 @@
 from typing import List
-
 from pydantic import UUID4, BaseModel
-
 from app.artworks.schemas import ArtworkSchema
 
 
-class CategoryBase(BaseModel):
+class CategorySchema(BaseModel):
+    """A schema representing a Category stored in the database"""
+    id: UUID4
+    name: str
+    artworks: List[ArtworkSchema] = []
+
+    class Config:
+        orm_mode = True
+
+
+class CategorySchemaIn(BaseModel):
+    """A schema representing a Category creation request"""
     name: str
 
     class Config:
         orm_mode = True
 
 
-class CategoryCreate(CategoryBase):
-    pass
-
-
-class Category(CategoryBase):
+class CategorySchemaUpdate(BaseModel):
+    """A schema representing a Category update request"""
     id: UUID4
-    artworks: List["ArtworkSchema"] = []
+    name: str
 
     class Config:
         orm_mode = True
+
+
+class CategoryArtworksSchema(BaseModel):
+    """A schema representing a Category with a list of Artworks."""
+    name: str
+    artworks: List[ArtworkSchema] = []

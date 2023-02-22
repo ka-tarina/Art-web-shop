@@ -1,6 +1,6 @@
+"""Module for superuser repository."""
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-
 from app.users.enums import UserRole
 from app.users.models import SuperUser
 from app.users.repository import UserRepository

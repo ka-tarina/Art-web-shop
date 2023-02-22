@@ -10,6 +10,7 @@ class Currency(str, Enum):
 
 
 class ArtworkSchema(BaseModel):
+    """A schema representing an Artwork stored in the database"""
     id: UUID4
     name: str
     description: str
@@ -27,6 +28,7 @@ class ArtworkSchema(BaseModel):
 
 
 class ArtworkSchemaIn(BaseModel):
+    """A schema representing an Artwork creation request"""
     name: str
     description: str
     price: float
