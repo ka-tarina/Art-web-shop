@@ -1,6 +1,6 @@
-"""Model for JWT Bearer controller"""
 import time
 from typing import List
+
 from fastapi import HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt import PyJWTError
@@ -9,13 +9,11 @@ from app.users.services import UserAuthHandlerServices
 
 
 class JWTBearer(HTTPBearer):
-    """Class to authenticate JWT tokens."""
     def __init__(self, roles: List[UserRole] = None, auto_error: bool = True):
         super(JWTBearer, self).__init__(auto_error=auto_error)
         self.roles = roles
 
     async def __call__(self, request: Request):
-        """Method to call the bearer token authentication."""
         credentials: HTTPAuthorizationCredentials = await super(JWTBearer, self).__call__(request)
         if credentials:
             if not credentials.scheme == "Bearer":
@@ -39,7 +37,6 @@ class JWTBearer(HTTPBearer):
             raise HTTPException(status_code=401, detail="Invalid authorization code.")
 
     def verify_jwt(self, jwtoken: str) -> dict:
-        """Verifies if jwt token is valid."""
         is_token_valid: bool = False
         try:
             payload = UserAuthHandlerServices.decodeJWT(jwtoken)

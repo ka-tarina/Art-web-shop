@@ -1,5 +1,5 @@
-"""Module for user schemas."""
 from pydantic import BaseModel, UUID4, EmailStr
+# Maybe redundant
 
 
 class UserSchema(BaseModel):
@@ -14,7 +14,6 @@ class UserSchema(BaseModel):
     is_artist: bool
 
     class Config:
-        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True
 
 
@@ -25,7 +24,6 @@ class UserSchemaIn(BaseModel):
     password: str
 
     class Config:
-        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True
 
 
@@ -37,11 +35,9 @@ class UserSchemaOut(BaseModel):
     password: str
 
     class Config:
-        """Configuration options for the Pydantic BaseModel."""
         orm_mode = True
 
 
 class LoginSchema(BaseModel):
-    """Schema for user login."""
     email: str
     password: str

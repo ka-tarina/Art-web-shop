@@ -1,8 +1,8 @@
 from fastapi import HTTPException
 from pydantic import EmailStr
 from sqlalchemy.exc import IntegrityError
-from app.users.services import CustomerServices
-from app.users.enums import UserStatus
+from app.users.services import CustomerServices, UserAuthHandlerServices
+from app.users.enums import UserStatus, UserRole
 
 
 class CustomerController:
@@ -26,6 +26,20 @@ class CustomerController:
         if not result:
             raise HTTPException(status_code=400, detail="Invalid password")
         return result
+
+    @staticmethod
+    def login_customer(email, password):
+        try:
+            customer = CustomerServices.get_customer_by_email(email)
+            if not customer:
+                raise HTTPException(status_code=400, detail="Invalid email or password")
+            if not CustomerServices.verify_password(password, customer.password):
+                raise HTTPException(status_code=400, detail="Invalid email or password")
+            return UserAuthHandlerServices.signJWT(customer.id, UserRole.CUSTOMER)
+        except HTTPException:
+            raise
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
     def get_customer_by_id(customer_id: str):
