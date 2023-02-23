@@ -26,7 +26,7 @@ class CategoryController:
         return categories
 
     @staticmethod
-    def get_category_by_id(category_id: uuid4()):
+    def get_category_by_id(category_id: str):
         """Returns the category for the given id."""
         try:
             category = CategoryService.get_category_by_id(category_id)
@@ -65,7 +65,7 @@ class CategoryController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def update_category_name(category_id: uuid4, new_name: str):
+    def update_category_name(category_id: str, new_name: str):
         """Updates the name of the category."""
         try:
             category = CategoryService.update_category_name(category_id=category_id, new_name=new_name)

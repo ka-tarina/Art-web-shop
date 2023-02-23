@@ -1,6 +1,8 @@
 """Module for admin service."""
+from pydantic import EmailStr
+
 from app.db.database import SessionLocal
-from app.users.repository import AdminRepository
+from app.users.repository import AdminRepository, UserRepository
 
 
 def repository_method_wrapper(func):
@@ -49,3 +51,9 @@ class AdminServices:
     def delete_admin_by_id(repository, admin_id: str):
         """Deletes an admin from the database by their ID."""
         return repository.delete_admin_by_id(admin_id=admin_id)
+
+    @staticmethod
+    @repository_method_wrapper
+    def get_admin_by_email(repository, email: EmailStr):
+        """Gets a user from the database by their email."""
+        return repository.read_admin_by_email(email=email)

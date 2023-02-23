@@ -5,7 +5,7 @@ from fastapi import HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt import PyJWTError
 from app.users.enums import UserRole
-from app.users.services import UserAuthHandlerServices
+from app.users.services import decodeJWT
 
 
 class JWTBearer(HTTPBearer):
@@ -21,7 +21,7 @@ class JWTBearer(HTTPBearer):
             if not credentials.scheme == "Bearer":
                 raise HTTPException(status_code=403, detail="Invalid authentication scheme.")
             try:
-                payload = UserAuthHandlerServices.decodeJWT(credentials.credentials)
+                payload = decodeJWT(credentials.credentials)
 
                 if self.roles is not None and UserRole(payload.get("role")) != self.roles:
                     raise HTTPException(
@@ -42,7 +42,7 @@ class JWTBearer(HTTPBearer):
         """Verifies if jwt token is valid."""
         is_token_valid: bool = False
         try:
-            payload = UserAuthHandlerServices.decodeJWT(jwtoken)
+            payload = decodeJWT(jwtoken)
         except Exception as e:
             print(e)
             payload = None

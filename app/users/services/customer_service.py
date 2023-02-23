@@ -25,7 +25,7 @@ class CustomerServices:
     def create_customer(repository, username: str, email: str, password: str):
         """Creates a new customer in the system."""
         hashed_password = hashlib.sha256(bytes(password, "utf-8")).hexdigest()
-        return repository.create_artist(username=username, email=email, password=hashed_password)
+        return repository.create_customer(username=username, email=email, password=hashed_password)
 
     @staticmethod
     def verify_password(plain_password, hashed_password):

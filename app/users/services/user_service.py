@@ -32,7 +32,7 @@ class UserServices:
     @repository_method_wrapper
     def get_user_by_id(repository, user_id: str):
         """Gets a user from the database by their ID."""
-        return repository.get_category_by_id(user_id=user_id)
+        return repository.get_user_by_id(user_id=user_id)
 
     @staticmethod
     @repository_method_wrapper

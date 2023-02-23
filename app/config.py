@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     REDIS_PORT: int
     REDIS_DB: int
 
+    DB_NAME_TEST: str
+    USE_TEST_DB: bool
+
     class Config:
         env_file = '../.env'
 

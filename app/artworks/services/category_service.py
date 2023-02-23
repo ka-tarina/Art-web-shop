@@ -1,6 +1,7 @@
 """Module for category service."""
 from uuid import uuid4
 from app.artworks.repository import CategoryRepository
+from app.artworks.schemas import CategoryArtworksSchema
 from app.db import SessionLocal
 
 
@@ -26,7 +27,7 @@ class CategoryService:
 
     @staticmethod
     @repository_method_wrapper
-    def get_category_by_id(repository, category_id: uuid4()):
+    def get_category_by_id(repository, category_id: str):
         """Returns the category for the given id."""
         return repository.get_category_by_id(category_id=category_id)
 
@@ -60,7 +61,7 @@ class CategoryService:
         with SessionLocal() as db:
             try:
                 category = CategoryRepository(db).get_category_by_id(category_id=category_id)
-                return category.artworks[skip: skip + limit]
+                return CategoryArtworksSchema(name=category.name, artworks=category.artworks)
             except Exception as e:
                 raise e
 
@@ -70,6 +71,6 @@ class CategoryService:
         with SessionLocal() as db:
             try:
                 category = CategoryRepository(db).get_category_by_name(name=category_name)
-                return category.artworks[skip: skip + limit]
+                return CategoryArtworksSchema(name=category.name, artworks=category.artworks)
             except Exception as e:
                 raise e

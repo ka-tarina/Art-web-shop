@@ -4,7 +4,7 @@ from pydantic import EmailStr
 from sqlalchemy.exc import IntegrityError
 from app.users.exceptions import UserInvalidPassword
 from app.users.enums import UserRole, UserStatus
-from app.users.services import UserServices, UserAuthHandlerServices
+from app.users.services import UserServices, signJWT
 
 
 class UserController:
@@ -29,12 +29,12 @@ class UserController:
         try:
             user = UserServices.login_user(email, password)
             if user.role == UserRole.SUPERUSER:
-                return UserAuthHandlerServices.signJWT(user.id, UserRole.SUPERUSER)
+                return signJWT(user.id, UserRole.SUPERUSER)
             elif user.role == UserRole.ADMIN:
-                return UserAuthHandlerServices.signJWT(user.id, UserRole.ADMIN)
+                return signJWT(user.id, UserRole.ADMIN)
             elif user.role == UserRole.ARTIST:
-                return UserAuthHandlerServices.signJWT(user.id, UserRole.ARTIST)
-            return UserAuthHandlerServices.signJWT(user.id, UserRole.CUSTOMER)
+                return signJWT(user.id, UserRole.ARTIST)
+            return signJWT(user.id, UserRole.CUSTOMER)
         except UserInvalidPassword as e:
             raise HTTPException(status_code=e.code, detail=e.message)
         except Exception as e:

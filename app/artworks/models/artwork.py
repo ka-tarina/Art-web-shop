@@ -13,19 +13,16 @@ class Artwork(Base):
     description = Column(String(500))
     price = Column(Float, index=True)
     image = Column(String(200))
-
-    category_id = Column(String(50), ForeignKey("category.id"))
-    category = relationship("Category", back_populates="artworks")
-
-    status = Column(Boolean, default=True)
     stock = int
-
+    category_id = Column(String(50), ForeignKey("category.id"))
+    status = Column(Boolean, default=True)
     artist_id = Column(String(50), ForeignKey("users.id"))
+    currency = Column(Enum("RSD", "EUR", name="currency_type"), default="RSD", server_default="RSD")
+
+    category = relationship("Category", back_populates="artworks")
     artist = relationship("Artist", back_populates="artworks", overlaps="artwork_artist")
 
     artwork_artist = relationship("Artist", back_populates="artworks", foreign_keys=[artist_id])
-
-    currency = Column(Enum("RSD", "EUR", name="currency_type"), default="RSD", server_default="RSD")
 
     orders = relationship("Order", uselist=False, back_populates="artwork")
 

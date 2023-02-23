@@ -4,6 +4,7 @@ from enum import Enum
 
 class UserRole(str, Enum):
     """Defines the different roles that a user can have in the system."""
+    USER = "user"
     SUPERUSER = "superuser"
     ADMIN = "admin"
     ARTIST = "artist"

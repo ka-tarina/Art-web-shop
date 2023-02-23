@@ -26,22 +26,20 @@ def login_user(user: LoginSchema):
 
 
 @user_router.get("/get-user-by-id/{user_id}",
-                 response_model=UserSchema,
-                 dependencies=[Depends(JWTBearer(roles=[UserRole.ADMIN, UserRole.SUPERUSER]))])
+                 response_model=UserSchema)
 def get_user_by_id(user_id: str):
     """gets a user by ID, expects a user_id, only available for admin or superuser roles"""
     return UserController.get_user_by_id(user_id)
 
 
 @user_router.get("/get-all-users",
-                 response_model=list[UserSchema],
-                 dependencies=[Depends(JWTBearer(roles=[UserRole.ADMIN, UserRole.SUPERUSER]))])
+                 response_model=list[UserSchema])
 def get_all_users():
     """Gets all users, only available for admin or superuser roles"""
     return UserController.get_all_users()
 
 
-@user_router.delete("/", dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER]))])
+@user_router.delete("/")#, dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER]))])
 def delete_user_by_id(user_id: str):
     """Deletes a user by ID, expects a user_id, only available for superuser role"""
     return UserController.delete_user_by_id(user_id)
@@ -60,8 +58,7 @@ async def create_customer(customer: CustomerSchemaIn):
 
 
 @customer_router.get("/get-all-customers",
-                     response_model=list[CustomerSchema],
-                     dependencies=[Depends(JWTBearer(roles=[UserRole.ADMIN, UserRole.SUPERUSER]))])
+                     response_model=list[CustomerSchema])
 async def get_all_customers():
     """Gets all customers, only available for admin or superuser roles"""
     customers = CustomerController.get_all_customers()
@@ -75,14 +72,14 @@ def get_customer_by_id(customer_id: str):
     return customer
 
 
-@customer_router.get("/get-customer-by-username/{customer_username}", response_model=CustomerSchema)
+@customer_router.get("/get-customer-by-username", response_model=CustomerSchema)
 def get_customer_by_username(customer_username: str):
     """Gets a customer by username"""
     customer = CustomerController.get_customer_by_username(customer_username=customer_username)
     return customer
 
 
-@customer_router.get("/get-customer-by-username/{customer_username}", response_model=CustomerSchema)
+@customer_router.get("/get-customer-by-identifier", response_model=CustomerSchema)
 def get_customer_by_identifier(identifier: str):
     """Gets a customer by ID, username or email"""
     customer = CustomerController.get_customer_by_identifier(identifier=identifier)
@@ -100,13 +97,13 @@ async def delete_customer_by_id(customer_id: str):
 @customer_router.put("/update-customer-status/{customer_id}",
                      response_model=CustomerSchema,
                      dependencies=[Depends(JWTBearer(roles=[UserRole.ADMIN, UserRole.SUPERUSER]))])
-async def update_customer_status(customer: UpdateCustomerSchema):
+async def update_customer_status(customer: UpdateCustomerStatusSchema):
     """Updates a customer's status, only available for admin or superuser roles"""
     response = CustomerController.update_customer_status(customer.customer_id, customer.status)
     return response
 
 
-@customer_router.get("/read-customer-by-email/{email}", response_model=CustomerSchemaOut)
+@customer_router.get("/get-customer-by-email/{email}", response_model=CustomerSchemaOut)
 async def get_customer_by_email(email: str):
     """Gets a customer by email"""
     customer = CustomerController.get_customer_by_email(email)
@@ -114,25 +111,26 @@ async def get_customer_by_email(email: str):
 
 
 @customer_router.put("/update-customer-email/{email}",
-                     response_model=CustomerSchema,
-                     dependencies=[Depends(JWTBearer(roles=[UserRole.ADMIN, UserRole.SUPERUSER]))])
-async def update_customer_email(customer: UpdateCustomerSchema):
+                     response_model=CustomerSchema)
+async def update_customer_email(customer: UpdateCustomerEmailSchema):
     """Updates a customer's email, only available for admin or superuser roles"""
     response = CustomerController.update_customer_email(customer.customer_id, customer.email)
     return response
 
 
 @customer_router.post("/follow-artist/{customer_id}/{artist_id}",
-                      response_model=CustomerFollowedArtistSchema,
-                      dependencies=[Depends(JWTBearer(roles=[UserRole.CUSTOMER]))])
+                      response_model=CustomerFollowedArtistSchema)
+# ,
+                      # dependencies=[Depends(JWTBearer(roles=[UserRole.CUSTOMER]))])
 async def follow_artist(follow_id: FollowSchema):
     """Allows a customer to follow an artist, only available for customer role"""
     return FollowController.follow_artist(follow_id.customer_id, follow_id.artist_id)
 
 
 @customer_router.post("/unfollow-artist/{customer_id}/{artist_id}",
-                      response_model=CustomerFollowedArtistSchema,
-                      dependencies=[Depends(JWTBearer(roles=[UserRole.CUSTOMER]))])
+                      response_model=CustomerFollowedArtistSchema)
+    # ,
+    #                   dependencies=[Depends(JWTBearer(roles=[UserRole.CUSTOMER]))])
 async def unfollow_artist(unfollow_id: FollowSchema):
     """Allows a customer to unfollow an artist, only available for customer role"""
     return FollowController.unfollow_artist(unfollow_id.customer_id, unfollow_id.artist_id)
@@ -158,8 +156,7 @@ async def create_superuser(superuser: SuperUserSchemaIn):
 
 
 @superuser_router.get("/get-superuser-by-id/{superuser_id}",
-                      response_model=SuperUserSchema,
-                      dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER]))])
+                      response_model=SuperUserSchema)
 async def get_superuser_by_id(superuser_id: str):
     """Gets a superuser by ID, only available for superuser role"""
     superuser = SuperUserController.get_superuser_by_id(superuser_id)
@@ -167,8 +164,7 @@ async def get_superuser_by_id(superuser_id: str):
 
 
 @superuser_router.get("/get-all-superusers",
-                      response_model=list[SuperUserSchema],
-                      dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER]))])
+                      response_model=list[SuperUserSchema])
 async def get_all_superusers():
     """Gets all superusers, only available for superuser role"""
     superusers = SuperUserController.get_all_superusers()
@@ -187,11 +183,14 @@ artist_router = APIRouter(tags=["artists"], prefix="/api/artists")
 
 
 @artist_router.post("/create-artist",
-                    response_model=ArtistSchemaIn,
-                    dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER, UserRole.ADMIN]))])
-async def create_artist(username: str, email: EmailStr, password: str, bio, website):
+                    response_model=ArtistSchema)
+async def create_artist(artist: ArtistSchemaIn):
     """Creates a new artist with the given username, email, password, bio, and website."""
-    artist = ArtistController.create_artist(username, email, password, bio, website)
+    artist = ArtistController.create_artist(artist.username,
+                                            artist.email,
+                                            artist.password,
+                                            artist.bio,
+                                            artist.website)
     return artist
 
 
@@ -221,7 +220,7 @@ async def get_all_artists():
 
 @artist_router.put("/update-artist-bio/{artist_id}",
                    response_model=ArtistSchema,
-                   dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER, UserRole.ADMIN]))])
+                   dependencies=[Depends(JWTBearer(roles=[UserRole.ARTIST, UserRole.ADMIN, UserRole.SUPERUSER]))])
 async def update_artist_bio(artist: ArtistSchemaUpdate):
     """Updates the bio of the artist"""
     artist = ArtistController.update_artist_bio(artist.id, artist.bio)
@@ -230,7 +229,7 @@ async def update_artist_bio(artist: ArtistSchemaUpdate):
 
 @artist_router.put("/update-artist-website/{artist_id}",
                    response_model=ArtistSchema,
-                   dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER, UserRole.ADMIN]))])
+                   dependencies=[Depends(JWTBearer(roles=[UserRole.ARTIST, UserRole.SUPERUSER, UserRole.ADMIN]))])
 async def update_artist_website(artist: ArtistSchemaUpdate):
     """Updates the website of the artist"""
     artist = ArtistController.update_artist_website(artist.id, artist.bio)
@@ -271,16 +270,14 @@ async def create_admin(admin: AdminSchemaIn):
 
 
 @admin_router.get("/get-admin-by-id/{admin_id}",
-                  response_model=AdminSchema,
-                  dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER, UserRole.ADMIN]))])
+                  response_model=AdminSchema)
 async def get_admin_by_id(admin_id: str):
     """Gets the admin with the given admin_id."""
     return AdminController.get_admin_by_id(admin_id)
 
 
 @admin_router.get("/get-all-admins",
-                  response_model=list[AdminSchema],
-                  dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER, UserRole.ADMIN]))])
+                  response_model=list[AdminSchema])
 async def get_all_admins():
     """Gets a list of all admins."""
     return AdminController.get_all_admins()
