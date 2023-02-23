@@ -9,30 +9,27 @@ USER_SECRET = settings.USER_SECRET
 JWT_ALGORITHM = settings.ALGORITHM
 
 
-class UserAuthHandlerServices:
-    """A service class for User Authentification Handler."""
-    @staticmethod
-    def signJWT(user_id: str, role: UserRole) -> Dict[str, str]:
-        """Makes JWT payload and returns a token"""
-        payload = {
-            "user_id": user_id,
-            "role": role,
-            "expires": time.time() + 1200
-        }
+def signJWT(user_id: str, role: UserRole) -> Dict[str, str]:
+    """Makes JWT payload and returns a token"""
+    payload = {
+        "user_id": user_id,
+        "role": role,
+        "expires": time.time() + 1200
+    }
 
-        token = jwt.encode(payload, USER_SECRET, algorithm=JWT_ALGORITHM)
+    token = jwt.encode(payload, USER_SECRET, algorithm=JWT_ALGORITHM)
 
-        return {"access_token": token}
+    return {"access_token": token}
 
-    @staticmethod
-    def decodeJWT(token: str) -> Dict or None:
-        """Decodes JWT token"""
-        try:
-            decoded_token = jwt.decode(token, USER_SECRET, algorithms=[JWT_ALGORITHM])
-            user_id: str = decoded_token.get("user_id")
-            role: UserRole = decoded_token.get("role")
-            if user_id is None or role is None:
-                return None
-            return {"user_id": user_id, "role": role}
-        except jwt.exceptions.ExpiredSignatureError:
+
+def decodeJWT(token: str) -> Dict or None:
+    """Decodes JWT token"""
+    try:
+        decoded_token = jwt.decode(token, USER_SECRET, algorithms=[JWT_ALGORITHM])
+        user_id: str = decoded_token.get("user_id")
+        role: UserRole = decoded_token.get("role")
+        if user_id is None or role is None:
             return None
+        return {"user_id": user_id, "role": role}
+    except jwt.exceptions.ExpiredSignatureError:
+        return None

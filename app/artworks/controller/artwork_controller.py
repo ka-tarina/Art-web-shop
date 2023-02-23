@@ -14,7 +14,7 @@ class ArtworkController:
         description: str,
         price: float,
         image: str,
-        stock: int,
+        stock: str,
         category_id: uuid4,
         status: bool,
         artist_id: uuid4,

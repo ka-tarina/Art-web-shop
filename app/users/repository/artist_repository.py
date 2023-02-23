@@ -39,7 +39,7 @@ class ArtistRepository:
 
     def get_artist_by_username(self, username: str):
         """Gets an artist from the database by their ID."""
-        artist = self.db.query(Artist).get(username)
+        artist = self.db.query(Artist).filter(Artist.username == username).first()
         if artist is None:
             raise Exception(f"Artist with username {username} not found")
         return artist

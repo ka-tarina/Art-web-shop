@@ -26,17 +26,15 @@ class User(Base):
     artist = relationship("Artist", uselist=False, back_populates="user")
     customer = relationship("Customer", uselist=False, back_populates="user")
 
-    # type = Column(String(50))  # For STI
+    __mapper_args__ = {
+        'polymorphic_on': role,
+        'polymorphic_identity': UserRole.USER
+    }
 
-    # __mapper_args__ = {
-    #     'polymorphic_on': type,
-    #     'polymorphic_identity': 'user'
-    # }
-
-    def __init__(self, username, email, password, role, status):
+    def __init__(self, username, email, password, status, role):
         """Initializes a new User object."""
         self.username = username
         self.email = email
         self.password = password
-        self.role = role
         self.status = status
+        self.role = role

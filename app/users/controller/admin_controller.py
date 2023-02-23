@@ -2,7 +2,7 @@
 from fastapi import HTTPException
 from pydantic import EmailStr
 from app.users.exceptions import UserNotFoundError
-from app.users.services import AdminServices, UserServices
+from app.users.services import AdminServices
 
 
 class AdminController:
@@ -10,7 +10,7 @@ class AdminController:
     def create_admin(username: str, email: EmailStr, password: str):
         """Creates a new admin in the system."""
         try:
-            user_exist = UserServices.get_user_by_email(email=email)
+            user_exist = AdminServices.get_admin_by_email(email=email)
             if user_exist:
                 raise HTTPException(
                     status_code=400,

@@ -35,7 +35,7 @@ class ArtworkSchemaIn(BaseModel):
     description: str
     price: float
     image: str
-    stock: int
+    stock: str
     category_id: UUID4
     status: bool
     artist_id: UUID4

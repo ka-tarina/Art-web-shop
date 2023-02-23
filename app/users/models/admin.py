@@ -11,9 +11,13 @@ class Admin(User):
 
     __tablename__ = "admins"
     id = Column(String(50), ForeignKey("users.id"), primary_key=True)
-    role = Column(sqltypes.Enum(UserRole, native_enum=False), default=UserRole.ADMIN)
+    # role = Column(sqltypes.Enum(UserRole, native_enum=False), default=UserRole.ADMIN)
 
     user = relationship("User", back_populates="admin")
+
+    __mapper_args__ = {
+        'polymorphic_identity': UserRole.ADMIN
+    }
 
     def __init__(self, username, email, password):
         """Initializes a new Admin object."""

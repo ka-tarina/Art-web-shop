@@ -25,7 +25,7 @@ class ArtworkService:
                        description: str,
                        price: float,
                        image: str,
-                       stock: int,
+                       stock: str,
                        category_id: uuid4,
                        artist_id: uuid4):
         """Creates a new artwork in the system."""

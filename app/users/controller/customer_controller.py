@@ -2,7 +2,7 @@
 from fastapi import HTTPException
 from pydantic import EmailStr
 from sqlalchemy.exc import IntegrityError
-from app.users.services import CustomerServices, UserAuthHandlerServices
+from app.users.services import CustomerServices, signJWT
 from app.users.enums import UserStatus, UserRole
 
 
@@ -37,7 +37,7 @@ class CustomerController:
                 raise HTTPException(status_code=400, detail="Invalid email or password")
             if not CustomerServices.verify_password(password, customer.password):
                 raise HTTPException(status_code=400, detail="Invalid email or password")
-            return UserAuthHandlerServices.signJWT(customer.id, UserRole.CUSTOMER)
+            return signJWT(customer.id, UserRole.CUSTOMER)
         except HTTPException:
             raise
         except Exception as e:

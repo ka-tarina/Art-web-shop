@@ -26,7 +26,7 @@ class CategorySchemaIn(BaseModel):
 
 class CategorySchemaUpdate(BaseModel):
     """A schema representing a Category update request"""
-    id: UUID4
+    id: str
     name: str
 
     class Config:

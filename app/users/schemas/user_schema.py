@@ -1,17 +1,17 @@
 """Module for user schemas."""
 from pydantic import BaseModel, UUID4, EmailStr
 
+from app.users.enums import UserStatus, UserRole
+
 
 class UserSchema(BaseModel):
     """Model for representing a User in the system."""
     id: UUID4
-    name: str
+    username: str
     email: str
     password: str
-    is_active: bool
-    is_superuser: bool
-    is_admin: bool
-    is_artist: bool
+    status: UserStatus
+    role: UserRole
 
     class Config:
         """Configuration options for the Pydantic BaseModel."""

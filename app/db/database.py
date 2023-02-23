@@ -6,8 +6,13 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from app.config import settings
 
+if settings.USE_TEST_DB:
+    db_name = settings.DB_NAME_TEST
+else:
+    db_name = settings.DB_NAME
+
 MYSQL_URL = f"{settings.DB_HOST}://{settings.DB_USER}:{settings.DB_PASSWORD}@" \
-            f"{settings.DB_HOSTNAME}:{settings.DB_PORT}/{settings.DB_NAME}"
+            f"{settings.DB_HOSTNAME}:{settings.DB_PORT}/{db_name}"
 
 engine = create_engine(MYSQL_URL, echo=True)
 

@@ -41,11 +41,20 @@ class CustomerSchemaOut(BaseModel):
         orm_mode = True
 
 
-class UpdateCustomerSchema(BaseModel):
-    """Schema for updating Customer info."""
+class UpdateCustomerStatusSchema(BaseModel):
+    """Schema for updating Customer status."""
     customer_id: str
-    status: Optional[UserStatus]
-    email: Optional[EmailStr]
+    status: UserStatus
+
+    class Config:
+        """Configuration options for the Pydantic BaseModel."""
+        orm_mode = True
+
+
+class UpdateCustomerEmailSchema(BaseModel):
+    """Schema for updating Customer email."""
+    customer_id: str
+    email: EmailStr
 
     class Config:
         """Configuration options for the Pydantic BaseModel."""

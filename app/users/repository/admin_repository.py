@@ -1,4 +1,5 @@
 """Module for admin repository."""
+from pydantic import EmailStr
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from app.users.enums import UserRole
@@ -54,5 +55,13 @@ class AdminRepository(UserRepository):
                 self.db.delete(admin)
                 self.db.commit()
             return True
+        except Exception as e:
+            raise e
+
+    def read_admin_by_email(self, email: EmailStr):
+        """Gets a user from the database by their email."""
+        try:
+            admin = self.db.query(Admin).filter(Admin.email == email).first()
+            return admin
         except Exception as e:
             raise e

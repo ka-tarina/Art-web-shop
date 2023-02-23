@@ -30,10 +30,10 @@ class Customer(User):
         back_populates="followers",
         foreign_keys=[follows.c.customer_id, follows.c.artist_id]
     )
-    #
-    # __mapper_args__ = {
-    #     'polymorphic_identity': 'customer'
-    # }
+
+    __mapper_args__ = {
+        'polymorphic_identity': UserRole.CUSTOMER
+    }
 
     def __init__(self, username, email, password):
         """Initializes a new Customer object."""
@@ -41,6 +41,6 @@ class Customer(User):
             username=username,
             email=email,
             password=password,
-            status=UserStatus.ACTIVE,
             role=UserRole.CUSTOMER,
+            status=UserStatus.ACTIVE
         )
