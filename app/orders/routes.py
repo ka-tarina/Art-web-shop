@@ -47,7 +47,8 @@ def get_order_by_artwork_id(artwork_id: str):
 
 
 @order_router.get("/get-orders-by-user-or-status", response_model=list[OrderSchema])
-def get_orders_by_user_or_status(user_id: Optional[str] = None, order_status: Optional[OrderStatus] = None):
+def get_orders_by_user_or_status(user_id: Optional[str] = None,
+                                 order_status: Optional[OrderStatus] = None):
     """Retrieves orders by user ID or status."""
     orders = OrderController.get_orders_by_user_or_status(user_id, order_status)
     return orders

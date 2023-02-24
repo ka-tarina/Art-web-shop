@@ -4,7 +4,7 @@ import hashlib
 from pydantic import EmailStr
 
 from app.db.database import SessionLocal
-from app.users.repository import AdminRepository, UserRepository
+from app.users.repository import AdminRepository
 
 
 def repository_method_wrapper(func):

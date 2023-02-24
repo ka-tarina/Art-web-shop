@@ -40,15 +40,14 @@ def get_all_users():
 
 
 @user_router.put("/update-user-role",
-                 response_model=UserSchema,
-                 dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER]))])
+                 response_model=UserSchema)
 async def update_user_role(user: UserSchemaUpdate):
     """Updates a customer's status, only available for admin or superuser roles"""
     response = UserController.update_user_role(user.id, user.role)
     return response
 
 
-@user_router.delete("/", dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER]))])
+@user_router.delete("/")
 def delete_user_by_id(user_id: str):
     """Deletes a user by ID, expects a user_id, only available for superuser role"""
     return UserController.delete_user_by_id(user_id)
@@ -57,7 +56,7 @@ def delete_user_by_id(user_id: str):
 customer_router = APIRouter(tags=["customers"], prefix="/api/customers")
 
 
-@customer_router.post("/create-customer", response_model=CustomerSchema)
+@customer_router.post("/create-customer")
 async def create_customer(customer: CustomerSchemaIn):
     """Creates a new customer"""
     customer = CustomerController.create_customer(customer.username,
@@ -95,8 +94,7 @@ def get_customer_by_identifier(identifier: str):
     return customer
 
 
-@customer_router.delete("/delete-customer-by-id/{customer_id}",
-                        dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER]))])
+@customer_router.delete("/delete-customer-by-id/{customer_id}")
 async def delete_customer_by_id(customer_id: str):
     """Deletes a customer by ID, only available for superuser role"""
     response = CustomerController.delete_customer_by_id(customer_id)
@@ -104,8 +102,7 @@ async def delete_customer_by_id(customer_id: str):
 
 
 @customer_router.put("/update-customer-status/{customer_id}",
-                     response_model=CustomerSchema,
-                     dependencies=[Depends(JWTBearer(roles=[UserRole.ADMIN, UserRole.SUPERUSER]))])
+                     response_model=CustomerSchema)
 async def update_customer_status(customer: UpdateCustomerStatusSchema):
     """Updates a customer's status, only available for admin or superuser roles"""
     response = CustomerController.update_customer_status(customer.customer_id, customer.status)
@@ -129,8 +126,6 @@ async def update_customer_email(customer: UpdateCustomerEmailSchema):
 
 @customer_router.post("/follow-artist/{customer_id}/{artist_id}",
                       response_model=CustomerFollowedArtistSchema)
-# ,
-                      # dependencies=[Depends(JWTBearer(roles=[UserRole.CUSTOMER]))])
 async def follow_artist(follow_id: FollowSchema):
     """Allows a customer to follow an artist, only available for customer role"""
     return FollowController.follow_artist(follow_id.customer_id, follow_id.artist_id)
@@ -138,8 +133,6 @@ async def follow_artist(follow_id: FollowSchema):
 
 @customer_router.post("/unfollow-artist/{customer_id}/{artist_id}",
                       response_model=CustomerFollowedArtistSchema)
-    # ,
-    #                   dependencies=[Depends(JWTBearer(roles=[UserRole.CUSTOMER]))])
 async def unfollow_artist(unfollow_id: FollowSchema):
     """Allows a customer to unfollow an artist, only available for customer role"""
     return FollowController.unfollow_artist(unfollow_id.customer_id, unfollow_id.artist_id)
@@ -237,16 +230,14 @@ async def update_artist_bio(artist: ArtistSchemaUpdate):
 
 
 @artist_router.put("/update-artist-website",
-                   response_model=ArtistSchema,
-                   dependencies=[Depends(JWTBearer(roles=[UserRole.ARTIST, UserRole.SUPERUSER, UserRole.ADMIN]))])
+                   response_model=ArtistSchema)
 async def update_artist_website(artist: ArtistSchemaUpdate):
     """Updates the website of the artist"""
     artist = ArtistController.update_artist_website(artist.id, artist.bio)
     return artist
 
 
-@artist_router.delete("/delete-artist-by-id",
-                      dependencies=[Depends(JWTBearer(roles=[UserRole.SUPERUSER]))])
+@artist_router.delete("/delete-artist-by-id")
 async def delete_artist_by_id(artist_id: str):
     """Deletes artist with the given artist_id."""
     return ArtistController.delete_artist_by_id(artist_id)

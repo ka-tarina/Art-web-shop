@@ -1,9 +1,6 @@
 """Module for artist repository."""
 from sqlalchemy.orm import Session
-
-from app.users.enums import UserRole
 from app.users.models import Artist, User
-from app.users.repository import UserRepository
 
 
 class ArtistRepository:

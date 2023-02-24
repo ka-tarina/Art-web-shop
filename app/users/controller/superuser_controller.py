@@ -1,12 +1,12 @@
 """Model for superuser controller"""
 from fastapi import HTTPException
 from pydantic import EmailStr
-from sqlalchemy.exc import IntegrityError
 
 from app.users.services import SuperUserServices, UserServices
 
 
 class SuperUserController:
+    """Super User Controller"""
     @staticmethod
     def create_superuser(username: str, email: EmailStr, password: str):
         """Creates a new superuser in the system."""
@@ -31,7 +31,7 @@ class SuperUserController:
                 user_id=user_id
             )
             return superuser
-        except Exception as e:
+        except Exception:
             raise HTTPException(
                 status_code=400,
                 detail=f"User with provided ID {user_id} does not exist",
@@ -43,11 +43,10 @@ class SuperUserController:
         superuser = SuperUserServices.get_superuser_by_id(superuser_id)
         if superuser:
             return superuser
-        else:
-            raise HTTPException(
-                status_code=400,
-                detail=f"Superuser with provided id {superuser_id} does not exist",
-            )
+        raise HTTPException(
+            status_code=400,
+            detail=f"Superuser with provided id {superuser_id} does not exist",
+        )
 
     @staticmethod
     def get_all_superusers():

@@ -1,5 +1,4 @@
 """Module for category repository."""
-from uuid import uuid4
 from sqlalchemy import orm
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, joinedload

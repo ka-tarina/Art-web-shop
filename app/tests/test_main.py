@@ -18,14 +18,15 @@ client = TestClient(app)
 
 
 class TestClass:
+    """Test class setup and teardown"""
 
-    def setup_method(self, method):
+    def setup_method(self):
         """setup any state tied to the execution of the given method in a
         class.  setup_method is invoked for every test method of a class.
         """
         Base.metadata.create_all(bind=engine)
 
-    def teardown_method(self, method):
+    def teardown_method(self):
         """teardown any state that was previously setup with a setup_method
         call.
         """

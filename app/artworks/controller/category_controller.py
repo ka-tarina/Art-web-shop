@@ -68,7 +68,8 @@ class CategoryController:
     def update_category_name(category_id: str, new_name: str):
         """Updates the name of the category."""
         try:
-            category = CategoryService.update_category_name(category_id=category_id, new_name=new_name)
+            category = CategoryService.update_category_name(category_id=category_id,
+                                                            new_name=new_name)
             return category
         except CategoryNotFoundException as e:
             print(e)

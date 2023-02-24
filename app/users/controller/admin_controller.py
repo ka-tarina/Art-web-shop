@@ -6,6 +6,7 @@ from app.users.services import AdminServices
 
 
 class AdminController:
+    """Admin controller class"""
     @staticmethod
     def create_admin(username: str, email: EmailStr, password: str):
         """Creates a new admin in the system."""
@@ -60,6 +61,6 @@ class AdminController:
             if not deleted:
                 raise UserNotFoundError(code=404, message="User not found")
             AdminServices.delete_admin_by_id(admin_id)
-            return {"detail": f"Admin deleted successfully"}
+            return {"detail": "Admin deleted successfully"}
         except Exception as e:
             raise HTTPException(status_code=400, detail=str(e))

@@ -126,12 +126,19 @@ class UserController:
     def update_user_password(email: str, password: str, new_password: str):
         """Updates user password"""
         try:
-            user = UserServices.update_user_password(email=email, password=password, new_password=new_password)
+            user = UserServices.update_user_password(
+                email=email,
+                password=password,
+                new_password=new_password
+            )
             return user
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e))
         except Exception:
-            raise HTTPException(status_code=400, detail=f"User with provided email {email} does not exist")
+            raise HTTPException(
+                status_code=400,
+                detail=f"User with provided email {email} does not exist"
+            )
 
     @staticmethod
     def update_user_status(username_id_email: str, status: UserStatus):
@@ -139,7 +146,7 @@ class UserController:
         try:
             user = UserServices.update_user_status(username_id_email=username_id_email, status=status)
             return user
-        except Exception as e:
+        except Exception:
             raise HTTPException(
                 status_code=400,
                 detail=f"User with provided identification {username_id_email} does not exist"
@@ -151,7 +158,7 @@ class UserController:
         try:
             user = UserServices.update_user_role(username_id_email=username_id_email, role=role)
             return user
-        except Exception as e:
+        except Exception:
             raise HTTPException(
                 status_code=400,
                 detail=f"User with provided identification {username_id_email} does not exist"
@@ -171,6 +178,8 @@ class UserController:
             if not deleted:
                 raise HTTPException(status_code=404, detail="User not found")
             UserServices.delete_user_by_id(user_id)
-            return {"detail": f"User with provided id {user_id} was successfully deleted from the database."}
+            return {
+                "detail": f"User with provided id {user_id} was successfully deleted from the database."
+            }
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))

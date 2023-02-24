@@ -1,7 +1,6 @@
 """Module for representing SuperUser in the system"""
 from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql import sqltypes
 from app.users.enums import UserRole, UserStatus
 from app.users.models import User
 

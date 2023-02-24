@@ -1,11 +1,10 @@
 """Module for customer repository."""
 from typing import Optional
 from pydantic import EmailStr
-from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-from app.users.enums import UserRole, UserStatus
-from app.users.models import Customer, User
+from app.users.enums import UserStatus
+from app.users.models import Customer
 
 
 class CustomerRepository:

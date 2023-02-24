@@ -10,10 +10,18 @@ from app.users.services import ArtistServices
 
 class ArtistController:
     @staticmethod
-    def create_artist(username: str, email: EmailStr, password: str, bio: str = "", website: str = ""):
+    def create_artist(username: str,
+                      email: EmailStr,
+                      password: str,
+                      bio: str = "",
+                      website: str = ""):
         """Creates a new artist in the system with error processing."""
         try:
-            return ArtistServices.create_artist(username, email, password, bio, website)
+            return ArtistServices.create_artist(username,
+                                                email,
+                                                password,
+                                                bio,
+                                                website)
         except IntegrityError:
             raise HTTPException(status_code=409, detail="User already exists")
         except Exception as e:

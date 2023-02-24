@@ -1,7 +1,6 @@
 """Module for representing admin in the system"""
 from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql import sqltypes
 from app.users.enums import UserRole, UserStatus
 from app.users.models import User
 
@@ -11,7 +10,6 @@ class Admin(User):
 
     __tablename__ = "admins"
     id = Column(String(50), ForeignKey("users.id"), primary_key=True)
-    # role = Column(sqltypes.Enum(UserRole, native_enum=False), default=UserRole.ADMIN)
 
     user = relationship("User", back_populates="admin")
 

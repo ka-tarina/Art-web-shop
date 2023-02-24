@@ -54,4 +54,3 @@ class ArtistSummaryReportResponseSchema(BaseModel):
     class Config:
         """Configuration options for the Pydantic BaseModel."""
         orm_mode = True
-

@@ -1,3 +1,6 @@
+"""Module for User Exceptions"""
+
+
 class UserInvalidPassword(Exception):
     """Exception raised when a user enters an invalid password."""
     def __init__(self, message, code):
@@ -6,14 +9,16 @@ class UserInvalidPassword(Exception):
 
 
 class UserNotSuperUser(Exception):
-    """Exception raised when a user tries to access resources or perform actions that are reserved for superusers."""
+    """Exception raised when a user tries to access resources
+    or perform actions that are reserved for superusers."""
     def __init__(self, message, code):
         self.message = message
         self.code = code
 
 
 class UserNotAdmin(Exception):
-    """Exception raised when a user tries to access resources or perform actions that are reserved for admins."""
+    """Exception raised when a user tries to access resources
+    or perform actions that are reserved for admins."""
     def __init__(self, message, code):
         self.message = message
         self.code = code

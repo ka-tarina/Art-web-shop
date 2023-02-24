@@ -20,6 +20,7 @@ class UserRepository:
                 username=username,
                 email=email,
                 password=password,
+                status=UserStatus.ACTIVE,
                 role=UserRole.USER)
             self.db.add(user)
             self.db.commit()

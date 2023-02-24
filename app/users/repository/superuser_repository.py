@@ -42,7 +42,7 @@ class SuperUserRepository(UserRepository):
         """Gets a superuser from the database by their ID."""
         user = self.get_user_by_id(superuser_id)
         if user.role == UserRole.SUPERUSER:
-            return SuperUser.from_orm(user)
+            return user
 
     def get_all_superusers(self):
         """Gets all superusers from the database."""

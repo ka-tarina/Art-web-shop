@@ -1,8 +1,7 @@
 """Module for artist service."""
 import hashlib
-
 from app.db.database import SessionLocal
-from app.users.repository import ArtistRepository, UserRepository
+from app.users.repository import ArtistRepository
 
 
 def repository_method_wrapper(func):

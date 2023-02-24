@@ -1,13 +1,13 @@
-import pytest
-from sqlalchemy.exc import IntegrityError
-
+"""Model for Test user repository"""
 from app.tests import TestClass, TestingSessionLocal
 from app.users.repository import UserRepository
 
 
 class TestUserRepo(TestClass):
+    """Test Class"""
 
     def create_users_for_methods(self):
+        """Method for creation of users for method"""
         with TestingSessionLocal() as db:
             user_repository = UserRepository(db)
             user_repository.create_user("user1", "user1@gmail.com", "sifra123")
@@ -16,6 +16,7 @@ class TestUserRepo(TestClass):
             user_repository.create_user("user4", "user4@gmail.com", "sifra123")
 
     def test_get_all_users(self):
+        """Test for getting all users"""
         self.create_users_for_methods()
         with TestingSessionLocal() as db:
             user_repository = UserRepository(db)
@@ -23,6 +24,7 @@ class TestUserRepo(TestClass):
             assert len(all_users) == 4
 
     def test_get_all_users_error(self):
+        """Test for getting all users error"""
         self.create_users_for_methods()
         with TestingSessionLocal() as db:
             user_repository = UserRepository(db)
@@ -30,6 +32,7 @@ class TestUserRepo(TestClass):
             assert not len(all_users) != 4
 
     def test_get_user_by_id(self):
+        """Test for getting user by id."""
         with TestingSessionLocal() as db:
             user_repository = UserRepository(db)
             user = user_repository.create_user("user5", "user5@gmail.com", "sifra1253")
@@ -37,6 +40,7 @@ class TestUserRepo(TestClass):
             assert user == user1
 
     def test_get_user_by_id_error(self):
+        """Test for getting user by id error."""
         with TestingSessionLocal() as db:
             user_repository = UserRepository(db)
             user = user_repository.create_user("user5", "user5@gmail.com", "sifra1253")
@@ -44,12 +48,14 @@ class TestUserRepo(TestClass):
             assert not user != user1
 
     def test_delete_user_by_id(self):
+        """Test for deleting user"""
         with TestingSessionLocal() as db:
             user_repository = UserRepository(db)
             user = user_repository.create_user("user5", "user5@gmail.com", "sifra1253")
             assert user_repository.delete_user_by_id(user.id) is True
 
     def test_delete_user_by_id_error(self):
+        """Test for deleting user error"""
         with TestingSessionLocal() as db:
             user_repository = UserRepository(db)
             user = user_repository.create_user("user5", "user5@gmail.com", "sifra1253")

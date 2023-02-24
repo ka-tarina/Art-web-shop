@@ -3,8 +3,6 @@ from datetime import datetime
 from typing import Optional
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-
-from app.artworks.models import Artwork
 from app.orders.models import Order
 from app.orders.models.order_enum import OrderStatus
 

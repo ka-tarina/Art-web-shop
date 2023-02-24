@@ -3,7 +3,11 @@ from datetime import datetime
 from uuid import uuid4
 
 from fastapi import HTTPException, Response
-from app.orders.exceptions import OrderExceptionCode, OrderNotFoundException, InvalidOrderStatusError
+from app.orders.exceptions import (
+    OrderExceptionCode,
+    OrderNotFoundException,
+    InvalidOrderStatusError
+)
 from app.orders.models import OrderStatus
 from app.orders.services import OrderService
 
@@ -42,7 +46,8 @@ class OrderController:
             orders = OrderService.get_order_by_artwork_id(artwork_id)
             return orders
         except ValueError:
-            OrderNotFoundException(code=404, message=f"Order with artwork ID {artwork_id} not found.")
+            OrderNotFoundException(code=404,
+                                   message=f"Order with artwork ID {artwork_id} not found.")
 
     @staticmethod
     def get_orders_by_user_or_status(user_id: str = None, order_status: OrderStatus = None):

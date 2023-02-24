@@ -16,6 +16,7 @@ def repository_method_wrapper(func):
 
 
 class FollowServices:
+    """A service class for Follow Services."""
     @staticmethod
     @repository_method_wrapper
     def follow_artist(repository, customer_id, artist_id):

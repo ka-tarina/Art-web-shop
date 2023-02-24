@@ -1,7 +1,9 @@
+"""Settings model"""
 from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
+    """Class representing base settings"""
     DB_HOST: str
     DB_HOSTNAME: str
     DB_PORT: int
@@ -20,6 +22,7 @@ class Settings(BaseSettings):
     USE_TEST_DB: bool
 
     class Config:
+        """Configuration options for the Pydantic BaseModel."""
         env_file = '../.env'
 
 

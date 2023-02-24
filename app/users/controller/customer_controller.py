@@ -7,6 +7,7 @@ from app.users.enums import UserStatus, UserRole
 
 
 class CustomerController:
+    """Customer controller class"""
     @staticmethod
     def create_customer(username: str, email: EmailStr, password: str):
         """Creates a new customer in the system."""
@@ -31,6 +32,7 @@ class CustomerController:
 
     @staticmethod
     def login_customer(email, password):
+        """Controller method for customer login"""
         try:
             customer = CustomerServices.get_customer_by_email(email)
             if not customer:
