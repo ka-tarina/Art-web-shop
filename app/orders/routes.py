@@ -22,8 +22,14 @@ def create_order(order: OrderSchemaIn):
     new_order = OrderController.create_order(order.user_id,
                                              order.shipping_address,
                                              order.artwork_id,
-                                             order.total_price)
+                                             order.shipping)
     return new_order
+
+
+@order_router.get("/get-all-orders", response_model=list[OrderSchema])
+def get_all_artworks():
+    """Retrieves all artworks"""
+    return OrderController.get_all_orders()
 
 
 @order_router.get("/get-order-by-id/{order_id}", response_model=OrderSchema)

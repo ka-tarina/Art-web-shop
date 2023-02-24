@@ -11,15 +11,20 @@ from app.orders.services import OrderService
 class OrderController:
     """A controller for handling requests related to orders."""
     @staticmethod
-    def create_order(user_id: uuid4, shipping_address: str, artwork_id: uuid4, shipping: float):
+    def create_order(user_id: str, shipping_address: str, artwork_id: str, shipping: float):
         """Creates a new order in the database."""
         try:
-            order = OrderService.create_order(user_id, shipping_address, artwork_id, shipping)
-            return order.as_dict()
+            OrderService.create_order(user_id, shipping_address, artwork_id, shipping)
         except OrderExceptionCode as e:
             raise HTTPException(status_code=e.code, detail=e.message)
         except InvalidOrderStatusError as e:
             raise HTTPException(status_code=400, detail=str(e))
+
+    @staticmethod
+    def get_all_orders():
+        """Gets all artworks from the database."""
+        orders = OrderService.get_all_orders()
+        return orders
 
     @staticmethod
     def get_order_by_id(order_id: str):
@@ -36,8 +41,8 @@ class OrderController:
         try:
             orders = OrderService.get_order_by_artwork_id(artwork_id)
             return orders
-        except OrderNotFoundException as e:
-            raise HTTPException(status_code=404, detail=str(e))
+        except ValueError:
+            OrderNotFoundException(code=404, message=f"Order with artwork ID {artwork_id} not found.")
 
     @staticmethod
     def get_orders_by_user_or_status(user_id: str = None, order_status: OrderStatus = None):

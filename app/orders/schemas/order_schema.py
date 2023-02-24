@@ -22,10 +22,10 @@ class OrderSchema(BaseModel):
 
 class OrderSchemaIn(BaseModel):
     """Model for representing incoming Order data."""
-    user_id: UUID4
+    user_id: str
     shipping_address: str
-    artwork_id: UUID4
-    total_price: float
+    artwork_id: str
+    shipping: int
 
     class Config:
         """Configuration options for the Pydantic BaseModel."""

@@ -32,7 +32,7 @@ class OrderService:
             try:
                 artwork_repository = ArtworkRepository(db)
                 order_repository = OrderRepository(db)
-                artwork = order_repository.get_order_by_artwork_id(artwork_id)
+                artwork = artwork_repository.get_artwork_by_id(artwork_id)
                 if not artwork:
                     raise OrderExceptionCode(
                         message=f"Order for artwork with ID {artwork_id} already exists.",
@@ -43,6 +43,7 @@ class OrderService:
                     raise InvalidOrderStatusError(
                         f"Artwork with ID {artwork_id} is out of stock.", code=400
                     )
+                artwork.stock -= 1
                 total_price = artwork.price + shipping
                 return order_repository.create_order(user_id=user_id,
                                                      total_price=total_price,
@@ -50,6 +51,12 @@ class OrderService:
                                                      artwork_id=artwork_id)
             except Exception as e:
                 raise e
+
+    @staticmethod
+    @repository_method_wrapper
+    def get_all_orders(repository):
+        """Gets all orders from the database."""
+        return repository.get_all_orders()
 
     @staticmethod
     @repository_method_wrapper

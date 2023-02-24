@@ -3,6 +3,8 @@ from datetime import datetime
 from typing import Optional
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+
+from app.artworks.models import Artwork
 from app.orders.models import Order
 from app.orders.models.order_enum import OrderStatus
 
@@ -14,9 +16,9 @@ class OrderRepository:
 
     def create_order(self,
                      user_id: str,
-                     total_price: float,
                      shipping_address: str,
-                     artwork_id: str):
+                     artwork_id: str,
+                     total_price: float):
         """Creates a new order in the database"""
         try:
             order = Order(user_id=user_id,
@@ -30,6 +32,10 @@ class OrderRepository:
             raise e
         except Exception as e:
             raise e
+
+    def get_all_orders(self):
+        """Gets all orders from the database."""
+        return self.db.query(Order).all()
 
     def get_order_by_id(self, order_id: str):
         """Gets an order from the database by its id."""
