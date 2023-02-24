@@ -86,7 +86,7 @@ def get_artwork_by_id(artwork_id: str):
 
 
 @artwork_router.get(
-    "/get-artwork-by-name/{artwork_name}", response_model=list[ArtworkSchema]
+    "/get-artwork-by-name/{artwork_name}", response_model=ArtworkSchema
 )
 def get_artwork_by_name(artwork_name: str):
     """Retrieves artworks by name"""

@@ -1,6 +1,6 @@
 """Module for representing artwork in the system"""
 from uuid import uuid4
-from sqlalchemy import Column, String, Boolean, ForeignKey, Float, Enum
+from sqlalchemy import Column, String, Boolean, ForeignKey, Float, Enum, Integer
 from sqlalchemy.orm import relationship
 from app.db.database import Base
 
@@ -13,7 +13,7 @@ class Artwork(Base):
     description = Column(String(500))
     price = Column(Float, index=True)
     image = Column(String(200))
-    stock = int
+    stock = Column(Integer, default=0, nullable=False)
     category_id = Column(String(50), ForeignKey("category.id"))
     status = Column(Boolean, default=True)
     artist_id = Column(String(50), ForeignKey("users.id"))

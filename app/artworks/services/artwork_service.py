@@ -58,7 +58,7 @@ class ArtworkService:
     @repository_method_wrapper
     def get_artwork_by_name(repository, name: str):
         """Gets an artwork from the database by its name."""
-        return repository.get_artwork_by_username(name=name)
+        return repository.get_artwork_by_name(name=name)
 
     @staticmethod
     @repository_method_wrapper
@@ -78,7 +78,7 @@ class ArtworkService:
     @repository_method_wrapper
     def get_stock_by_artwork_id(repository, artwork_id):
         """Gets stock of an artwork from the database by its id."""
-        return repository.get_stock_by_artwork_id(artwork_id=artwork_id)
+        return repository.get_stock_by_id(artwork_id=artwork_id)
 
     @staticmethod
     @repository_method_wrapper

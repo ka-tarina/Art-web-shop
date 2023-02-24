@@ -18,9 +18,9 @@ class ArtworkRepository:
         """Gets an artwork from the database by its id."""
         return self.db.query(Artwork).filter(Artwork.id == artwork_id).first()
 
-    def get_artwork_by_name(self, artwork_name: str):
+    def get_artwork_by_name(self, name: str):
         """Gets an artwork from the database by its name."""
-        return self.db.query(Artwork).filter(Artwork.name == artwork_name).first()
+        return self.db.query(Artwork).filter(Artwork.name == name).first()
 
     def artwork_exists(self, name: str, description: str):
         """Checks if artwork exists in the database."""
