@@ -19,7 +19,8 @@ class UserRepository:
             user = User(
                 username=username,
                 email=email,
-                password=password)
+                password=password,
+                role=UserRole.USER)
             self.db.add(user)
             self.db.commit()
             self.db.refresh(user)

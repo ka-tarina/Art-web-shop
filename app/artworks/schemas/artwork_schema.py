@@ -17,7 +17,7 @@ class ArtworkSchema(BaseModel):
     description: str
     price: float
     image: str
-    stock: int
+    stock: Any
     category_id: UUID4
     status: bool
     artist_id: UUID4
@@ -35,11 +35,9 @@ class ArtworkSchemaIn(BaseModel):
     description: str
     price: float
     image: str
-    stock: str
+    stock: int
     category_id: UUID4
-    status: bool
     artist_id: UUID4
-    currency: Currency
 
     class Config:
         """Configuration options for the Pydantic BaseModel."""

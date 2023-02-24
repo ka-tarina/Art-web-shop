@@ -1,4 +1,6 @@
 """Module for admin service."""
+import hashlib
+
 from pydantic import EmailStr
 
 from app.db.database import SessionLocal
@@ -24,8 +26,9 @@ class AdminServices:
     @repository_method_wrapper
     def create_admin(repository, username, email, password):
         """Creates a new admin in the system."""
+        hashed_password = hashlib.sha256(bytes(password, "utf-8")).hexdigest()
         return repository.create_admin(
-            username=username, email=email, password=password
+            username=username, email=email, password=hashed_password
         )
 
     @staticmethod

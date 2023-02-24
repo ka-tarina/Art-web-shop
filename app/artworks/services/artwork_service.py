@@ -20,12 +20,11 @@ def repository_method_wrapper(func):
 class ArtworkService:
     """A service for handling artwork."""
     @staticmethod
-    @repository_method_wrapper
     def create_artwork(name: str,
                        description: str,
                        price: float,
                        image: str,
-                       stock: str,
+                       stock: int,
                        category_id: uuid4,
                        artist_id: uuid4):
         """Creates a new artwork in the system."""

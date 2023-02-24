@@ -56,20 +56,6 @@ async def update_category_name(category: CategorySchemaUpdate):
     return CategoryController.update_category_name(category.id, category.name)
 
 
-@category_router.get("/get-artworks-by-category-name/{category_name}/artworks",
-                     response_model=CategoryArtworksSchema)
-async def get_artworks_by_category_name(category_name: str, skip: int = 0, limit: int = 100):
-    """Retrieves artworks by category name"""
-    return CategoryController.get_artworks_by_category_name(category_name, skip, limit)
-
-
-@category_router.get("/get-artworks-by-category-id/{category_id}/artworks",
-                     response_model=CategoryArtworksSchema)
-async def get_artworks_by_category_id(category_id: str, skip: int = 0, limit: int = 100):
-    """Retrieves artworks by category id"""
-    return CategoryController.get_artworks_by_category_id(category_id,  skip, limit)
-
-
 artwork_router = APIRouter(tags=["artworks"], prefix="/api/artworks")
 
 
@@ -83,9 +69,7 @@ def create_new_artwork(artwork: ArtworkSchemaIn):
         artwork.image,
         artwork.stock,
         artwork.category_id,
-        artwork.status,
         artwork.artist_id,
-        artwork.currency,
     )
 
 
@@ -133,3 +117,17 @@ def update_artwork(artwork_id: str, artwork_data: ArtworkSchemaUpdate):
 def get_artworks_in_price_range(min_price: float, max_price: float):
     """Retrieves artworks within a price range"""
     return ArtworkController.get_artworks_in_price_range(min_price, max_price)
+
+
+@artwork_router.get("/get-artworks-by-category-id/{category_id}/artworks",
+                    response_model=CategoryArtworksSchema)
+async def get_artworks_by_category_id(category_id: str, skip: int = 0, limit: int = 100):
+    """Retrieves artworks by category id"""
+    return CategoryController.get_artworks_by_category_id(category_id,  skip, limit)
+
+
+@artwork_router.get("/get-artworks-by-category-name/{category_name}/artworks",
+                    response_model=CategoryArtworksSchema)
+async def get_artworks_by_category_name(category_name: str, skip: int = 0, limit: int = 100):
+    """Retrieves artworks by category name"""
+    return CategoryController.get_artworks_by_category_name(category_name, skip, limit)

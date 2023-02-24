@@ -22,7 +22,10 @@ class Artist(User):
     website = Column(String(100), nullable=True)
 
     # Relationships with other tables
-    artworks = relationship("Artwork", back_populates="artist")
+    artworks = relationship("Artwork",
+                            back_populates="artist",
+                            cascade="all, delete, delete-orphan",
+                            overlaps="artist")
     user = relationship("User", back_populates="artist")
 
     followers = relationship(

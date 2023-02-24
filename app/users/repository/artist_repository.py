@@ -1,6 +1,9 @@
 """Module for artist repository."""
 from sqlalchemy.orm import Session
-from app.users.models import Artist
+
+from app.users.enums import UserRole
+from app.users.models import Artist, User
+from app.users.repository import UserRepository
 
 
 class ArtistRepository:
@@ -39,10 +42,15 @@ class ArtistRepository:
 
     def get_artist_by_username(self, username: str):
         """Gets an artist from the database by their ID."""
-        artist = self.db.query(Artist).filter(Artist.username == username).first()
-        if artist is None:
-            raise Exception(f"Artist with username {username} not found")
-        return artist
+        try:
+            user = self.db.query(User).filter(User.username.like(f"%{username}%")).first()
+            if user:
+                artist = self.db.query(Artist).get(user.id)
+                if artist:
+                    self.db.refresh(artist)
+                    return artist
+        except Exception as e:
+            raise e
 
     def get_all_artists(self):
         """Gets all artists from the database."""

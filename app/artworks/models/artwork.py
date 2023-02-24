@@ -20,9 +20,9 @@ class Artwork(Base):
     currency = Column(Enum("RSD", "EUR", name="currency_type"), default="RSD", server_default="RSD")
 
     category = relationship("Category", back_populates="artworks")
-    artist = relationship("Artist", back_populates="artworks", overlaps="artwork_artist")
+    artist = relationship("Artist", back_populates="artworks", overlaps="artworks", viewonly=True)
 
-    artwork_artist = relationship("Artist", back_populates="artworks", foreign_keys=[artist_id])
+    artwork_artist = relationship("Artist", back_populates="artworks", foreign_keys=[artist_id], viewonly=True)
 
     orders = relationship("Order", uselist=False, back_populates="artwork")
 

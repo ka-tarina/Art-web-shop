@@ -1,4 +1,6 @@
 """Module for artist service."""
+import hashlib
+
 from app.db.database import SessionLocal
 from app.users.repository import ArtistRepository, UserRepository
 
@@ -27,9 +29,10 @@ class ArtistServices:
                       bio: str = "",
                       website: str = ""):
         """Creates a new artist in the system."""
+        hashed_password = hashlib.sha256(bytes(password, "utf-8")).hexdigest()
         return repository.create_artist(username=username,
                                         email=email,
-                                        password=password,
+                                        password=hashed_password,
                                         bio=bio,
                                         website=website)
 
@@ -44,8 +47,8 @@ class ArtistServices:
         """Gets an artist from the database by their username."""
         with SessionLocal() as db:
             try:
-                user_repository = UserRepository(db)
-                user = user_repository.get_user_by_username(username=username)
+                repository = ArtistRepository(db)
+                user = repository.get_artist_by_username(username=username)
                 if user.role == "artist":
                     return user
             except Exception as e:

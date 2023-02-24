@@ -1,7 +1,7 @@
 """Module for follow repository."""
 from sqlalchemy import desc
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.users.models import Artist, Customer
 
 
@@ -14,10 +14,12 @@ class FollowRepository:
     def follow_artist(self, customer_id: str, artist_id: str):
         """Allows a customer to follow an artist."""
         try:
-            customer = self.db.query(Customer).get(customer_id)
+            customer = self.db.query(Customer).\
+                options(joinedload(Customer.follows)).\
+                get(customer_id)
             artist = self.db.query(Artist).get(artist_id)
-            if artist not in customer.following:
-                customer.following.append(artist)
+            if artist not in customer.follows:
+                customer.follows.append(artist)
                 artist.followers.append(customer)
                 self.db.commit()
                 self.db.refresh(customer)
@@ -32,8 +34,8 @@ class FollowRepository:
         try:
             customer = self.db.query(Customer).get(customer_id)
             artist = self.db.query(Artist).get(artist_id)
-            if artist in customer.following:
-                customer.following.remove(artist)
+            if artist in customer.follows:
+                customer.follows.remove(artist)
                 artist.followers.remove(customer)
                 self.db.commit()
                 self.db.refresh(customer)
@@ -47,7 +49,7 @@ class FollowRepository:
         """Retrieves all artists that a customer is following."""
         try:
             customer = self.db.query(Customer).get(customer_id)
-            return customer.following
+            return customer.follows
         except IntegrityError as e:
             raise e
         except Exception as e:

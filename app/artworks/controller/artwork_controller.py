@@ -14,11 +14,9 @@ class ArtworkController:
         description: str,
         price: float,
         image: str,
-        stock: str,
+        stock: int,
         category_id: uuid4,
-        status: bool,
         artist_id: uuid4,
-        currency: Currency,
     ):
         """Creates a new artwork in the system."""
         try:
@@ -29,9 +27,7 @@ class ArtworkController:
                 image=image,
                 stock=stock,
                 category_id=category_id,
-                status=status,
                 artist_id=artist_id,
-                currency=currency,
             )
             return artwork
         except ArtworkExceptionCode as e:

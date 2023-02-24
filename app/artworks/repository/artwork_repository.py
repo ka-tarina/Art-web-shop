@@ -35,7 +35,7 @@ class ArtworkRepository:
         description: str,
         price: float,
         image: str,
-        stock: str,
+        stock: int,
         category_id: uuid4,
         artist_id: uuid4,
     ):
@@ -46,7 +46,7 @@ class ArtworkRepository:
                 description=description,
                 price=price,
                 image=image,
-                stock=int(stock),
+                stock=stock,
                 category_id=category_id,
                 artist_id=artist_id,
             )

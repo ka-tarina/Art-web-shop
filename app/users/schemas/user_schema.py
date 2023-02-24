@@ -41,6 +41,16 @@ class UserSchemaOut(BaseModel):
         orm_mode = True
 
 
+class UserSchemaUpdate(BaseModel):
+    """Model for representing user data."""
+    id: str
+    role: UserRole
+
+    class Config:
+        """Configuration options for the Pydantic BaseModel."""
+        orm_mode = True
+
+
 class LoginSchema(BaseModel):
     """Schema for user login."""
     email: str

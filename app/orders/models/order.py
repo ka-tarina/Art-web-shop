@@ -14,9 +14,13 @@ class Order(Base):
     id = Column(String(50), primary_key=True, default=uuid4, unique=True, index=True)
 
     user_id = Column(String(50), ForeignKey('users.id'), index=True)
-    user = relationship("User", back_populates="orders")
+    user = relationship("User", back_populates="orders", viewonly=True)
 
-    customer = relationship("Customer", back_populates="orders", foreign_keys=[user_id])
+    customer = relationship("Customer",
+                            back_populates="orders",
+                            foreign_keys=[user_id],
+                            overlaps="orders",
+                            viewonly=True)
 
     order_date = Column(DateTime, default=datetime.utcnow, index=True)
     total_price = Column(Float, index=True)

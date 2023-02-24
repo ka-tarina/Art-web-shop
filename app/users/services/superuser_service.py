@@ -1,4 +1,6 @@
 """Module for superuser service."""
+import hashlib
+
 from app.db.database import SessionLocal
 from app.users.repository import SuperUserRepository
 
@@ -20,8 +22,9 @@ class SuperUserServices:
     @staticmethod
     @repository_method_wrapper
     def create_superuser(repository, username, email, password):
+        hashed_password = hashlib.sha256(bytes(password, "utf-8")).hexdigest()
         """Creates a new superuser in the system."""
-        return repository.create_superuser(username=username, email=email, password=password)
+        return repository.create_superuser(username=username, email=email, password=hashed_password)
 
     @staticmethod
     @repository_method_wrapper

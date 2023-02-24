@@ -21,7 +21,7 @@ class ArtistSchema(BaseModel):
 
 class ArtistSchemaUpdate(BaseModel):
     """Model for updating an Artist."""
-    id: UUID4
+    id: str
     email: Optional[EmailStr]
     password: Optional[str]
     bio: Optional[str]
