@@ -1,99 +1,37 @@
-Artist Web Shop Python Project - README
+Art Web Shop
 
-This project provides an API for managing an artist web shop. It is built using the FastAPI framework and uses MySQL for data storage. The following endpoints are available:
-Requirements
+Welcome to Art Web Shop, a web application for managing and showcasing artworks and artist information. This application allows you to create a platform where artists can display their artwork, and users can browse, purchase, and interact with the art community.
+Features
 
-    mysql-connector-python
-    SQLAlchemy==2.0.3
-    sqlalchemy-utils
-    fastapi[all]==0.91.0
-    fastapi-utils
-    PYMYSQL~=1.0.2
-    uvicorn~=0.20.0
-    pydantic~=1.10.4
-    cryptography
-    PyJWT==2.6.0
-    python-decouple~=3.7
-    bcrypt
-    starlette~=0.24.0
-    enum34
-    celery~=5.2.7
-    redis~=4.5.1
-    pre-commit~=3.0.4
+    Artwork Management: Easily add, update, and delete artworks, including details like title, description, price, and image.
+    Artist Profiles: Create and manage artist profiles, showcasing their bio, portfolio, and contact information.
+    User Authentication: Secure user registration and login system using JSON Web Tokens (JWT) for authentication and authorization.
+    Order Management: Admins can handle and track orders, update order status, and manage inventory.
+    Search and Filtering: Search for artworks by title, artist, or category, and apply filters based on various criteria.
+    User Reviews and Ratings: Users can leave reviews and ratings for artworks, contributing to an interactive art community.
 
-Endpoints
-Categories
-Create a new category
+Installation
 
-    Endpoint: POST /api/category/create-new-category
-    Function: CategoryController.create_category
-    Request body: CategoryCreateSchema
-    Response: CategorySchema
+    Clone the repository:
 
-Get all categories
+    bash
 
-    Endpoint: GET /api/category/get-all-categories
-    Function: CategoryController.get_all_categories
-    Response: List[CategorySchema]
+git clone https://github.com/ka-tarina/Art-web-shop.git
 
-Get category by ID
+Install the required dependencies:
 
-    Endpoint: GET /api/category/get-category-by-id/{category_id}
-    Function: CategoryController.get_category_by_id
-    Path parameter: category_id - ID of the category to retrieve
-    Response: CategorySchema
+bash
 
-Get category by name
+pip install -r requirements.txt
 
-    Endpoint: GET /api/category/get-category_by_name
-    Function: CategoryController.get_category_by_name
-    Query parameter: name - name of the category to retrieve
-    Response: CategorySchema
+Configure the application settings:
 
-Delete category
+    Create a .env file based on the provided .env.example file.
+    Modify the configuration parameters in the .env file to match your environment (e.g., database connection details, authentication settings).
 
-    Endpoint: DELETE /api/category/delete-category
-    Function: CategoryController.delete_category
-    Request body: CategoryDeleteSchema
-    Response: CategorySchema
+Run the application:
 
-Update category name
+bash
 
-    Endpoint: PUT /api/category/update-category-name/{category_id}
-    Function: CategoryController.update_category_name
-    Path parameter: category_id - ID of the category to update
-    Request body: CategoryUpdateSchema
-    Response: CategorySchema
+    uvicorn main:app --reload
 
-Get artworks by category name
-
-    Endpoint: GET /api/category/get-artworks-by-category-name/{category_name}/artworks
-    Function: CategoryController.get_artworks_by_category_name
-    Path parameter: category_name - name of the category to retrieve artworks from
-    Response: List[ArtworkSchema]
-
-Get artworks by category ID
-
-    Endpoint: GET /api/category/get-artworks-by-category-id/{category_id}/artworks
-    Function: CategoryController.get_artworks_by_category_id
-    Path parameter: category_id - ID of the category to retrieve artworks from
-    Response: List[ArtworkSchema]
-
-Artworks
-Create a new artwork
-
-    Endpoint: POST /api/artworks/create-new-artwork
-    Function: ArtworkController.create_artwork
-    Request body: ArtworkCreateSchema
-    Response: ArtworkSchema
-
-Get all artworks
-
-    Endpoint: GET /api/artworks/get-all-artworks
-    Function: ArtworkController.get_all_artworks
-    Response: List[ArtworkSchema]
-
-Get artwork by ID
-
-    Endpoint: GET /api/artworks/get-artwork-by-id/{artwork_id}
-    Function: `
