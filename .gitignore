@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+
+.pre-commit-config.yaml
+.pylintrc
+
 # Distribution / packaging
 .Python
 .pytestcache/
