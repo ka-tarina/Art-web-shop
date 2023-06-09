@@ -15,7 +15,7 @@ Welcome to Art Web Shop, a web application for managing and showcasing artworks 
 
 ## Installation
 
-1. Clone the repository:
+Clone the repository:
    git clone https://github.com/ka-tarina/Art-web-shop.git
 
 Install the required dependencies:
